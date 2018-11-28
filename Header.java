@@ -1,5 +1,5 @@
 public class Header {
-    public Header() {
+    public Header(byte[] bytes) {
 
     }
 }

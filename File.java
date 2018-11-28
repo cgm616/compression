@@ -6,7 +6,7 @@ public class File {
     }
 
     public Header getHeader() {
-        return new Header();
+        return new Header(bytes);
     }
 
     public byte[] getBody() {

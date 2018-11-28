@@ -11,8 +11,8 @@ import javafx.util.Duration;
 public class Main extends Application {
     Compress decryptPage;
     Expand encryptPage;
-        
-        @Override
+    
+    @Override
     public void start(Stage stage) {
         // GUI code
 
