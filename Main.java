@@ -9,18 +9,21 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 
 public class Main extends Application {
-    Compress decryptPage;
-    Expand encryptPage;
-    
+    public static Compress compressPage;
+    public static Expand expandPage;
+
     @Override
     public void start(Stage stage) {
         // GUI code
 
         // Creating a Group object
-        Group root = new Group(hexagon);
+        Group root = new Group();
 
         // Creating a scene object
-        Scene scene = new Scene(root, 600, 300);
+        Scene scene = new Scene(root, 720, 480);
+
+        this.compressPage = new Compress();
+        this.expandPage = new Expand();
 
         // Setting title to the Stage
         stage.setTitle("Compression");

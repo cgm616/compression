@@ -1,7 +1,7 @@
-public class File {
+public class Artifact {
     byte[] bytes;
 
-    public File(byte[] bytes) {
+    public Artifact(byte[] bytes) {
         this.bytes = bytes;
     }
 

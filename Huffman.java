@@ -1,4 +1,4 @@
-import Optional;
+import java.util.Optional;
 
 public class Huffman {
     Node top;
@@ -8,7 +8,7 @@ public class Huffman {
     }
 
     private Node build(byte[] input) {
-        return new Node(0, 0); // TODO: make this really build the tree!
+        return new Node(0, (byte) 0); // TODO: make this really build the tree!
     }
 
     public static Huffman deserialize(byte[] input) {
