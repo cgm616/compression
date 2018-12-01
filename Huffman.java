@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
 import java.util.Map.Entry;
+import java.util.BitSet;
 
 public class Huffman {
     Node top;
@@ -62,8 +63,52 @@ public class Huffman {
         return new byte[1]; // TODO: do this!
     }
 
-    public byte[] compress(byte[] bytes) {
-        return new byte[1];
+    public ArrayList<Byte> compress(byte[] input) {
+        ArrayList<Boolean> output = new ArrayList<Boolean>();
+
+        for (byte b : input) {
+            Node parent = this.top;
+
+            if (!parent.values.contains(b)) {
+                return null; // TODO: error handling
+            }
+
+            while (true) {
+                if (parent.values.size() == 1) {
+                    break;
+                }
+
+                if (parent.left.values.contains(b)) {
+                    output.add(false);
+                    parent = parent.left;
+                } else if (parent.right.values.contains(b)) {
+                    output.add(true);
+                    parent = parent.right;
+                } else {
+                    return null; // TODO: error handling
+                    // This is a malformed tree
+                }
+            }
+        }
+
+        ArrayList<Byte> ret = new ArrayList<Byte>();
+        byte next = 0;
+
+        for (int i = 0; i < output.size(); i++) {
+            if (output.get(i)) {
+                byte mask = 1 << (7 - (i % 8));
+                next = next | mask;
+            }
+
+            if (i % 8 == 7) {
+                ret.add(next);
+                next = 0;
+            }
+        }
+
+        ret.add(next);
+
+        return ret;
     }
 
     public byte[] expand(byte[] bytes) {
