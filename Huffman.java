@@ -47,7 +47,7 @@ public class Huffman {
                 values.addAll(last.values);
                 values.addAll(second.values);
                 int weight = last.weight + second.weight;
-                Node parent = new Node(Optional.of(second), Optional.of(last), values, weight);
+                Node parent = new Node(second, last, values, weight);
                 queue.add(parent);
             }
         }
