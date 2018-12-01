@@ -16,22 +16,22 @@ public class Huffman {
             return null; // TODO: make this real error handling
         }
 
-        TreeMap map = new TreeMap<Byte, Integer>();
+        TreeMap<Byte, Integer> map = new TreeMap<Byte, Integer>();
 
         for (byte b : input) {
             if (map.containsKey(b)) {
-                Integer frequency = (Integer) map.get(b) + 1;
+                Integer frequency = map.get(b) + 1;
                 map.put(b, frequency);
             } else {
                 map.put(b, 1);
             }
         }
 
-        PriorityQueue queue = new PriorityQueue<Node>();
+        PriorityQueue<Node> queue = new PriorityQueue<Node>();
 
         while (!map.isEmpty()) {
             Entry e = map.pollFirstEntry();
-            ArrayList values = new ArrayList<Byte>();
+            ArrayList<Byte> values = new ArrayList<Byte>();
             values.add((Byte) e.getKey());
             Node node = new Node(values, (int) e.getValue());
         }
@@ -42,7 +42,7 @@ public class Huffman {
                 return last;
             } else {
                 Node second = queue.poll();
-                ArrayList values = new ArrayList();
+                ArrayList<Byte> values = new ArrayList();
                 values.addAll(last.values);
                 values.addAll(second.values);
                 int weight = last.weight + second.weight;
