@@ -92,21 +92,21 @@ public class Huffman {
         }
 
         ArrayList<Byte> ret = new ArrayList<Byte>();
-        byte next = 0;
+        int next = 0;
 
         for (int i = 0; i < output.size(); i++) {
             if (output.get(i)) {
-                byte mask = 1 << (7 - (i % 8));
+                int mask = 1 << (7 - (i % 8));
                 next = next | mask;
             }
 
             if (i % 8 == 7) {
-                ret.add(next);
+                ret.add((byte) next);
                 next = 0;
             }
         }
 
-        ret.add(next);
+        ret.add((byte) next);
 
         return ret;
     }
