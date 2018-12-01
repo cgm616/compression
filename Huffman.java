@@ -131,8 +131,8 @@ public class Huffman {
             this.values = value;
         }
 
-        public Node(ArrayList<Byte> value, int weight) {
-            new Node(null, null, weight, value);
+        public Node(ArrayList<Byte> values, int weight) {
+            new Node(null, null, values, weight);
         }
     }
 }
