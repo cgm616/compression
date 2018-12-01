@@ -31,9 +31,9 @@ public class Huffman {
         PriorityQueue<Node> queue = new PriorityQueue<Node>();
 
         while (!map.isEmpty()) {
-            Entry e = map.pollFirstEntry();
+            Entry<Byte, Integer> e = map.pollFirstEntry();
             ArrayList<Byte> values = new ArrayList<Byte>();
-            values.add((Byte) e.getKey());
+            values.add(e.getKey());
             Node node = new Node(values, (int) e.getValue());
         }
 
@@ -43,7 +43,7 @@ public class Huffman {
                 return last;
             } else {
                 Node second = queue.poll();
-                ArrayList<Byte> values = new ArrayList();
+                ArrayList<Byte> values = new ArrayList<Byte>();
                 values.addAll(last.values);
                 values.addAll(second.values);
                 int weight = last.weight + second.weight;
