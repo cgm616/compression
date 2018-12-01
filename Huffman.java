@@ -62,7 +62,13 @@ public class Huffman {
         return new byte[1]; // TODO: do this!
     }
 
+    public byte[] compress(byte[] bytes) {
+        return new byte[1];
+    }
 
+    public byte[] expand(byte[] bytes) {
+        return new byte[1];
+    }
 
     class Node {
         public Optional<Node> left;
