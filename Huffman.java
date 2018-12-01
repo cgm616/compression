@@ -111,7 +111,17 @@ public class Huffman {
         return ret;
     }
 
-    public byte[] expand(byte[] bytes) {
+    public byte[] expand(byte[] input) {
+        /*
+         * for (byte b : input) { for (int i = 0; i < 8; i++) { byte mask = 1 << (7 -
+         * i); int msb = (b & mask) >> i;
+         * 
+         * Node parent = this.top;
+         * 
+         * if (msb == 0) {
+         * 
+         * } } }
+         */
         return new byte[1];
     }
 
