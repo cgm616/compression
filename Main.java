@@ -22,8 +22,8 @@ public class Main extends Application {
         // Creating a scene object
         Scene scene = new Scene(root, 720, 480);
 
-        this.compressPage = new Compress();
-        this.expandPage = new Expand();
+        Main.compressPage = new Compress();
+        Main.expandPage = new Expand();
 
         // Setting title to the Stage
         stage.setTitle("Compression");
