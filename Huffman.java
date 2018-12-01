@@ -71,14 +71,14 @@ public class Huffman {
     }
 
     class Node {
-        public Optional<Node> left;
-        public Optional<Node> right;
+        public Node left;
+        public Node right;
 
         public int weight;
 
         public ArrayList<Byte> values;
 
-        public Node(Optional<Node> left, Optional<Node> right, ArrayList<Byte> value, int weight) {
+        public Node(Node left, Node right, ArrayList<Byte> value, int weight) {
             this.left = left;
             this.right = right;
 
@@ -87,7 +87,7 @@ public class Huffman {
         }
 
         public Node(ArrayList<Byte> value, int weight) {
-            new Node(Optional.empty(), Optional.empty(), Optional.empty(), weight, value);
+            new Node(null, null, weight, value);
         }
     }
 }
