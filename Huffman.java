@@ -1,4 +1,8 @@
 import java.util.Optional;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.TreeMap;
+import java.util.Map.Entry;
 
 public class Huffman {
     Node top;
@@ -8,7 +12,46 @@ public class Huffman {
     }
 
     private Node build(byte[] input) {
-        return new Node(0, (byte) 0); // TODO: make this really build the tree!
+        if (input.length < 1) {
+            return null; // TODO: make this real error handling
+        }
+
+        TreeMap map = new TreeMap<Byte, Integer>();
+
+        for (byte b : input) {
+            if (map.containsKey(b)) {
+                Integer frequency = (Integer) map.get(b) + 1;
+                map.put(b, frequency);
+            } else {
+                map.put(b, 1);
+            }
+        }
+
+        PriorityQueue queue = new PriorityQueue<Node>();
+
+        while (!map.isEmpty()) {
+            Entry e = map.pollFirstEntry();
+            ArrayList values = new ArrayList<Byte>();
+            values.add((Byte) e.getKey());
+            Node node = new Node(values, (int) e.getValue());
+        }
+
+        while (!queue.isEmpty()) {
+            Node last = queue.poll();
+            if (queue.isEmpty()) {
+                return last;
+            } else {
+                Node second = queue.poll();
+                ArrayList values = new ArrayList();
+                values.addAll(last.values);
+                values.addAll(second.values);
+                int weight = last.weight + second.weight;
+                Node parent = new Node(Optional.of(second), Optional.of(last), values, weight);
+                queue.add(parent);
+            }
+        }
+
+        return null; // This should never happen, but make it real error handling if it does
     }
 
     public static Huffman deserialize(byte[] input) {
@@ -19,26 +62,25 @@ public class Huffman {
         return new byte[1]; // TODO: do this!
     }
 
-    class Node {
-        public Optional<Node> parent;
 
+
+    class Node {
         public Optional<Node> left;
         public Optional<Node> right;
 
         public int weight;
-        public byte value;
 
-        public Node(Optional<Node> parent, Optional<Node> left, Optional<Node> right, int weight, byte value) {
-            this.parent = parent;
+        public ArrayList<Byte> values;
 
+        public Node(Optional<Node> left, Optional<Node> right, ArrayList<Byte> value, int weight) {
             this.left = left;
             this.right = right;
 
             this.weight = weight;
-            this.value = value;
+            this.values = value;
         }
 
-        public Node(int weight, byte value) {
+        public Node(ArrayList<Byte> value, int weight) {
             new Node(Optional.empty(), Optional.empty(), Optional.empty(), weight, value);
         }
     }
