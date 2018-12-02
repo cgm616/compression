@@ -35,6 +35,7 @@ public class Huffman {
             ArrayList<Byte> values = new ArrayList<Byte>();
             values.add(e.getKey());
             Node node = new Node(values, (int) e.getValue());
+            queue.add(node);
         }
 
         while (!queue.isEmpty()) {

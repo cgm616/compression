@@ -7,23 +7,35 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.control.TabPane;
+import javafx.scene.control.Tab;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.Node;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 
 public class Main extends Application {
-    public static Compress compressPage;
-    public static Expand expandPage;
 
     @Override
     public void start(Stage stage) {
-        // GUI code
 
         // Creating a Group object
-        Group root = new Group();
+        HBox root = new HBox();
 
         // Creating a scene object
-        Scene scene = new Scene(root, 720, 480);
+        Scene scene = new Scene(root);
 
-        Main.compressPage = new Compress();
-        Main.expandPage = new Expand();
+        Compress compress = new Compress(stage);
+        Expand expand = new Expand();
+
+        Tab compressTab = createTab("Compress", compress.render());
+        Tab expandTab = createTab("Expand", expand.render());
+
+        TabPane tabPane = new TabPane(compressTab, expandTab);
+
+        HBox.setHgrow(tabPane, Priority.ALWAYS);
+
+        root.getChildren().add(tabPane);
 
         // Setting title to the Stage
         stage.setTitle("Compression");
@@ -39,5 +51,13 @@ public class Main extends Application {
 
     public static void main(String args[]) {
         launch(args);
+    }
+
+    private Tab createTab(String name, Node content) {
+        Tab tab = new Tab();
+        tab.setClosable(false);
+        tab.setText(name);
+        tab.setContent(content);
+        return tab;
     }
 }
