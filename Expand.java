@@ -1,17 +1,12 @@
-import javafx.scene.Group;
+import javafx.stage.Stage;
 
-public class Expand {
-
-    public Expand() {
-
+public class Expand extends ColdenTab {
+    public Expand(Stage stage) {
+        super(stage);
     }
 
-    private void run() {
-        Huffman tree = new Huffman(new byte[1]);
-        Artifact file = new Artifact(new byte[1]);
-    }
-
-    public Group render() {
-        return new Group();
+    @Override
+    public void run() {
+        System.out.println("Run called");
     }
 }

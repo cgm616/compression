@@ -26,7 +26,7 @@ public class Main extends Application {
         Scene scene = new Scene(root);
 
         Compress compress = new Compress(stage);
-        Expand expand = new Expand();
+        Expand expand = new Expand(stage);
 
         Tab compressTab = createTab("Compress", compress.render());
         Tab expandTab = createTab("Expand", expand.render());
