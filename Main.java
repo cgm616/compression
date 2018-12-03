@@ -38,7 +38,7 @@ public class Main extends Application {
         root.getChildren().add(tabPane);
 
         // Setting title to the Stage
-        stage.setTitle("Compression");
+        stage.setTitle("Colden");
 
         // Adding scene to the stage
         stage.setScene(scene);
