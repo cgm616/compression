@@ -1,22 +1,16 @@
 import java.util.Optional;
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
 import java.util.Map.Entry;
-import java.util.BitSet;
 
 public class Huffman {
-    Node top;
+    private Node top;
 
     public Huffman(byte[] input) {
         this.top = build(input);
-        String output = "[";
-        for (int i = 0; i < this.top.values.length; i++) {
-            output = output + this.top.values[i] + ", ";
-        }
-        output = output + "]";
-        System.out.println(output);
     }
 
     private Node build(byte[] input) {
@@ -78,7 +72,29 @@ public class Huffman {
     }
 
     public byte[] serialize() {
-        return new byte[0]; // TODO: do this!
+        ArrayList<Boolean> bits = new ArrayList<Boolean>();
+        serializeInternal(this.top, bits);
+        return bytesFromBits(bits);
+    }
+
+    private void serializeInternal(Node n, ArrayList<Boolean> output) {
+        if (n.values.length == 1) {
+            output.add(false);
+            int value = (int) n.values[0];
+            for (int i = 0; i < 8; i++) {
+                if (value % 2 == 0) {
+                    output.add(false);
+                } else {
+                    output.add(true);
+                }
+                value = value >> 1;
+            }
+            return;
+        } else {
+            output.add(true);
+            serializeInternal(n.left, output);
+            serializeInternal(n.right, output);
+        }
     }
 
     public byte[] compress(byte[] input) {
@@ -89,7 +105,6 @@ public class Huffman {
 
             if (Arrays.binarySearch(parent.values, b) < 0) {
                 System.out.println(b);
-                System.out.println("Exiting early from compress because a byte isn't in the tree");
                 return null; // TODO: error handling
             }
 
@@ -105,20 +120,23 @@ public class Huffman {
                     output.add(true);
                     parent = parent.right;
                 } else {
-                    System.out.println("exiting early from compress because a byte is in neither child");
                     return null; // TODO: error handling
                     // This is a malformed tree
                 }
             }
         }
 
-        int len = (output.size() / 8) + 1;
+        return bytesFromBits(output);
+    }
+
+    private static byte[] bytesFromBits(ArrayList<Boolean> bits) {
+        int len = (bits.size() / 8) + 1;
 
         byte[] ret = new byte[len];
         int next = 0;
 
-        for (int i = 0; i < output.size(); i++) {
-            if (output.get(i)) {
+        for (int i = 0; i < bits.size(); i++) {
+            if (bits.get(i)) {
                 int mask = 1 << (7 - (i % 8));
                 next = next | mask;
             }
@@ -134,7 +152,7 @@ public class Huffman {
         return ret;
     }
 
-    public byte[] expand(byte[] input) {
+    public static byte[] expand(byte[] input) {
         /*
          * for (byte b : input) { for (int i = 0; i < 8; i++) { byte mask = 1 << (7 -
          * i); int msb = (b & mask) >> i;
@@ -153,7 +171,6 @@ public class Huffman {
         public Node right;
 
         public int weight;
-
         public byte[] values;
 
         public Node(Node left, Node right, byte[] values, int weight) {
