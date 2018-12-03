@@ -1,0 +1,1 @@
+This is a small file that probably won't compress super well. It is used for manual inspection of the outputted binary file.
