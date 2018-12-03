@@ -1,5 +1,6 @@
 import java.util.Optional;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
 import java.util.Map.Entry;
@@ -10,6 +11,12 @@ public class Huffman {
 
     public Huffman(byte[] input) {
         this.top = build(input);
+        String output = "[";
+        for (int i = 0; i < this.top.values.length; i++) {
+            output = output + this.top.values[i] + ", ";
+        }
+        output = output + "]";
+        System.out.println(output);
     }
 
     private Node build(byte[] input) {
@@ -32,8 +39,8 @@ public class Huffman {
 
         while (!map.isEmpty()) {
             Entry<Byte, Integer> e = map.pollFirstEntry();
-            ArrayList<Byte> values = new ArrayList<Byte>();
-            values.add(e.getKey());
+            byte[] values = new byte[1];
+            values[0] = e.getKey();
             Node node = new Node(values, (int) e.getValue());
             queue.add(node);
         }
@@ -44,9 +51,19 @@ public class Huffman {
                 return last;
             } else {
                 Node second = queue.poll();
-                ArrayList<Byte> values = new ArrayList<Byte>();
-                values.addAll(last.values);
-                values.addAll(second.values);
+
+                int len = last.values.length + second.values.length;
+                byte[] values = new byte[len];
+
+                for (int i = 0; i < last.values.length; i++) {
+                    values[i] = last.values[i];
+                }
+                for (int i = 0; i < second.values.length; i++) {
+                    values[i + last.values.length] = second.values[i];
+                }
+
+                Arrays.sort(values);
+
                 int weight = last.weight + second.weight;
                 Node parent = new Node(second, last, values, weight);
                 queue.add(parent);
@@ -61,38 +78,43 @@ public class Huffman {
     }
 
     public byte[] serialize() {
-        return new byte[1]; // TODO: do this!
+        return new byte[0]; // TODO: do this!
     }
 
-    public ArrayList<Byte> compress(byte[] input) {
+    public byte[] compress(byte[] input) {
         ArrayList<Boolean> output = new ArrayList<Boolean>();
 
         for (byte b : input) {
             Node parent = this.top;
 
-            if (!parent.values.contains(b)) {
+            if (Arrays.binarySearch(parent.values, b) < 0) {
+                System.out.println(b);
+                System.out.println("Exiting early from compress because a byte isn't in the tree");
                 return null; // TODO: error handling
             }
 
             while (true) {
-                if (parent.values.size() == 1) {
+                if (parent.values.length == 1) {
                     break;
                 }
 
-                if (parent.left.values.contains(b)) {
+                if (Arrays.binarySearch(parent.left.values, b) >= 0) {
                     output.add(false);
                     parent = parent.left;
-                } else if (parent.right.values.contains(b)) {
+                } else if (Arrays.binarySearch(parent.right.values, b) >= 0) {
                     output.add(true);
                     parent = parent.right;
                 } else {
+                    System.out.println("exiting early from compress because a byte is in neither child");
                     return null; // TODO: error handling
                     // This is a malformed tree
                 }
             }
         }
 
-        ArrayList<Byte> ret = new ArrayList<Byte>();
+        int len = (output.size() / 8) + 1;
+
+        byte[] ret = new byte[len];
         int next = 0;
 
         for (int i = 0; i < output.size(); i++) {
@@ -102,12 +124,12 @@ public class Huffman {
             }
 
             if (i % 8 == 7) {
-                ret.add((byte) next);
+                ret[i / 8] = (byte) next;
                 next = 0;
             }
         }
 
-        ret.add((byte) next);
+        ret[len - 1] = (byte) next;
 
         return ret;
     }
@@ -126,24 +148,32 @@ public class Huffman {
         return new byte[1];
     }
 
-    class Node {
+    class Node implements Comparable<Node> {
         public Node left;
         public Node right;
 
         public int weight;
 
-        public ArrayList<Byte> values;
+        public byte[] values;
 
-        public Node(Node left, Node right, ArrayList<Byte> value, int weight) {
+        public Node(Node left, Node right, byte[] values, int weight) {
             this.left = left;
             this.right = right;
 
+            this.values = values;
             this.weight = weight;
-            this.values = value;
         }
 
-        public Node(ArrayList<Byte> values, int weight) {
-            new Node(null, null, values, weight);
+        public Node(byte[] values, int weight) {
+            this(null, null, values, weight);
+        }
+
+        public int compareTo(Node other) {
+            return ((Integer) this.weight).compareTo((Integer) other.weight);
+        }
+
+        public String toString() {
+            return "weight: " + this.weight + ", values: " + this.values;
         }
     }
 }

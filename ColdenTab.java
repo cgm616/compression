@@ -93,7 +93,6 @@ public class ColdenTab {
             @Override
             public void handle(final ActionEvent e) {
                 if (input != null && output != null) {
-                    System.out.println("Running compression on " + input + " and outputting into " + output);
                     run();
                 } else {
                     // TODO: show error
