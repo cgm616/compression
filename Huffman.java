@@ -13,6 +13,10 @@ public class Huffman {
         this.top = build(input);
     }
 
+    private Huffman(Node top) {
+        this.top = top;
+    }
+
     private Node build(byte[] input) {
         if (input.length < 1) {
             return null; // TODO: make this real error handling
@@ -68,7 +72,49 @@ public class Huffman {
     }
 
     public static Huffman deserialize(byte[] input) {
-        return new Huffman(new byte[1]); // TODO: make this work!
+        BitArray bits = BitArray.fromBytes(input);
+        Node head = new Node(null, null);
+        deserializeInternal(head, 0, bits);
+        return new Huffman(head);
+    }
+
+    private static int deserializeInternal(Node head, int bitIndex, BitArray bits) {
+        int newIndex = bitIndex;
+
+        if (bitIndex > bits.length()) {
+            return 0; // This should never happen.
+        }
+
+        if (bits.get(bitIndex)) {
+            // The current bit is 1.
+            newIndex += 1;
+
+            Node left = new Node(null, null);
+            head.left = left;
+            newIndex += deserializeInternal(left, newIndex, bits);
+
+            Node right = new Node(null, null);
+            head.right = right;
+            newIndex += deserializeInternal(right, newIndex, bits);
+
+            return newIndex;
+        } else {
+            // Current bit is 0.
+            newIndex += 1;
+
+            int value = 0;
+
+            for (int i = 0; i < 8; i++) {
+                if (bits.get(newIndex + i)) {
+                    int mask = 1 << i;
+                    value = value | mask;
+                }
+            }
+
+            newIndex += 8;
+
+            return newIndex;
+        }
     }
 
     public byte[] serialize() {
@@ -152,7 +198,7 @@ public class Huffman {
         return ret;
     }
 
-    public static byte[] expand(byte[] input) {
+    public byte[] expand(byte[] input) {
         /*
          * for (byte b : input) { for (int i = 0; i < 8; i++) { byte mask = 1 << (7 -
          * i); int msb = (b & mask) >> i;
@@ -166,14 +212,14 @@ public class Huffman {
         return new byte[1];
     }
 
-    class Node implements Comparable<Node> {
+    static class Node implements Comparable<Node> {
         public Node left;
         public Node right;
 
-        public int weight;
+        public Integer weight;
         public byte[] values;
 
-        public Node(Node left, Node right, byte[] values, int weight) {
+        public Node(Node left, Node right, byte[] values, Integer weight) {
             this.left = left;
             this.right = right;
 
@@ -181,12 +227,12 @@ public class Huffman {
             this.weight = weight;
         }
 
-        public Node(byte[] values, int weight) {
+        public Node(byte[] values, Integer weight) {
             this(null, null, values, weight);
         }
 
         public int compareTo(Node other) {
-            return ((Integer) this.weight).compareTo((Integer) other.weight);
+            return this.weight.compareTo(other.weight);
         }
 
         public String toString() {
