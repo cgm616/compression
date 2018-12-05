@@ -1,6 +1,7 @@
-import javafx.stage.Stage;
-import java.nio.file.Files;
 import java.io.IOException;
+import java.nio.file.Files;
+
+import javafx.stage.Stage;
 
 public class Expand extends ColdenTab {
     public Expand(Stage stage) {
@@ -20,11 +21,20 @@ public class Expand extends ColdenTab {
             inputData = new byte[0];
         }
 
+        System.out.println("Input data length: " + inputData.length);
+
         Artifact compressedData = Artifact.fromBytes(inputData);
 
-        Huffman expander = Huffman.deserialize(compressedData.getSerializedTree());
+        byte[] tree = compressedData.getSerializedTree();
+        byte[] body = compressedData.getBody();
 
-        byte[] outputData = expander.expand(compressedData.getBody());
+        System.out.println("Serialized tree length: " + tree.length);
+        System.out.println("Compressed body length: " + body.length);
+
+        Huffman expander = Huffman.deserialize(tree);
+        byte[] outputData = expander.expand(body);
+
+        System.out.println("Output data length: " + outputData.length);
 
         Artifact.writeBytes(output.toPath(), outputData);
     }

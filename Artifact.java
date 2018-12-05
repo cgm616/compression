@@ -1,15 +1,15 @@
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
-import java.io.IOException;
-import java.nio.file.Files;
 
 public class Artifact {
     public static final byte[] MAGIC = { 0x31, 0x41, 0x59, 0x26 };
     public static final byte MARKER = (byte) 0xFF;
 
-    private byte[] bytes;
-    private int markerIndex; // Index of first byte of 0xFFFFFF
+    protected byte[] bytes;
+    protected int markerIndex; // Index of first byte of 0xFFFFFF
 
     private Artifact(byte[] bytes, int markerIndex) {
         this.bytes = bytes;
@@ -26,13 +26,14 @@ public class Artifact {
         int index = 4;
 
         while (true) {
+            System.out.println("Infinite loop!");
             if (index + 2 >= bytes.length) {
                 return null; // TODO: error handling
                 // This should occur when the marker never exists.
             }
 
             if (bytes[index] == (byte) 0xFF) {
-                if (bytes[index + 1] == (byte) 0xFF && bytes[index + 2] == (byte) 0xFF) {
+                if ((bytes[index + 1] == (byte) 0xFF) && (bytes[index + 2] == (byte) 0xFF)) {
                     break;
                 }
             }
@@ -74,7 +75,7 @@ public class Artifact {
     }
 
     public byte[] getBody() {
-        return Arrays.copyOfRange(this.bytes, 4 + this.markerIndex, this.bytes.length - 1);
+        return Arrays.copyOfRange(this.bytes, 3 + this.markerIndex, this.bytes.length);
     }
 
     public void writeToPath(Path path) {

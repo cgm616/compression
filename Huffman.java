@@ -1,10 +1,8 @@
-import java.util.Optional;
-import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Map.Entry;
 import java.util.PriorityQueue;
 import java.util.TreeMap;
-import java.util.Map.Entry;
 
 public class Huffman {
     private Node top;
@@ -91,16 +89,28 @@ public class Huffman {
 
             Node left = new Node(null, null);
             head.left = left;
-            newIndex += deserializeInternal(left, newIndex, bits);
+            newIndex = deserializeInternal(left, newIndex, bits);
 
             Node right = new Node(null, null);
             head.right = right;
-            newIndex += deserializeInternal(right, newIndex, bits);
+            newIndex = deserializeInternal(right, newIndex, bits);
+
+            int length = left.values.length + right.values.length;
+            byte[] values = Arrays.copyOf(left.values, length);
+            for (int i = 0; i < right.values.length; i++) {
+                values[left.values.length + i] = right.values[i];
+            }
+
+            head.values = values;
 
             return newIndex;
         } else {
             // Current bit is 0.
             newIndex += 1;
+
+            if (newIndex + 7 > bits.length()) {
+                return newIndex;
+            }
 
             int value = 0;
 
@@ -110,6 +120,9 @@ public class Huffman {
                     value = value | mask;
                 }
             }
+
+            head.values = new byte[1];
+            head.values[0] = (byte) value;
 
             newIndex += 8;
 
@@ -144,13 +157,14 @@ public class Huffman {
     }
 
     public byte[] compress(byte[] input) {
-        ArrayList<Boolean> output = new ArrayList<Boolean>();
+        BitArray output = new BitArray();
+        System.out.println("Compressing length: " + input.length);
+        output.pushInt(input.length);
 
         for (byte b : input) {
             Node parent = this.top;
 
             if (Arrays.binarySearch(parent.values, b) < 0) {
-                System.out.println(b);
                 return null; // TODO: error handling
             }
 
@@ -160,10 +174,10 @@ public class Huffman {
                 }
 
                 if (Arrays.binarySearch(parent.left.values, b) >= 0) {
-                    output.add(false);
+                    output.push(false);
                     parent = parent.left;
                 } else if (Arrays.binarySearch(parent.right.values, b) >= 0) {
-                    output.add(true);
+                    output.push(true);
                     parent = parent.right;
                 } else {
                     return null; // TODO: error handling
@@ -172,7 +186,7 @@ public class Huffman {
             }
         }
 
-        return bytesFromBits(output);
+        return output.toArray();
     }
 
     private static byte[] bytesFromBits(ArrayList<Boolean> bits) {
@@ -199,17 +213,38 @@ public class Huffman {
     }
 
     public byte[] expand(byte[] input) {
-        /*
-         * for (byte b : input) { for (int i = 0; i < 8; i++) { byte mask = 1 << (7 -
-         * i); int msb = (b & mask) >> i;
-         * 
-         * Node parent = this.top;
-         * 
-         * if (msb == 0) {
-         * 
-         * } } }
-         */
-        return new byte[1];
+        BitArray bits = BitArray.fromBytes(input);
+        ArrayList<Byte> output = new ArrayList<Byte>(2 * input.length);
+        int length = bits.getInt(0);
+        System.out.println("Looking for " + length + " bytes");
+
+        int i = 32;
+        int bytesOutput = 0;
+        while (bytesOutput < length) {
+            Node current = this.top;
+            while (current.values.length > 1) {
+                if (bits.get(i)) {
+                    current = current.right;
+                    i += 1;
+                } else {
+                    current = current.left;
+                    i += 1;
+                }
+            }
+
+            output.add(current.values[0]);
+            bytesOutput += 1;
+        }
+
+        byte[] ret = new byte[output.size()];
+        int index = 0;
+
+        for (byte b : output) {
+            ret[index] = b;
+            index += 1;
+        }
+
+        return ret;
     }
 
     static class Node implements Comparable<Node> {
