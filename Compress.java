@@ -1,6 +1,7 @@
-import javafx.stage.Stage;
-import java.nio.file.Files;
 import java.io.IOException;
+import java.nio.file.Files;
+
+import javafx.stage.Stage;
 
 public class Compress extends ColdenTab {
     public Compress(Stage stage) {

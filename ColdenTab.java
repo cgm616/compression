@@ -1,15 +1,15 @@
-import javafx.scene.Group;
+import java.io.File;
+
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Button;
-import javafx.scene.Node;
-import javafx.geometry.Insets;
-import java.io.File;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.event.EventHandler;
-import javafx.event.ActionEvent;
 
 public class ColdenTab {
     Stage stage;

@@ -1,18 +1,11 @@
-import javafx.animation.RotateTransition;
 import javafx.application.Application;
-import static javafx.application.Application.launch;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
-import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.scene.control.TabPane;
-import javafx.scene.control.Tab;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.control.Tab;
+import javafx.scene.control.TabPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
+import javafx.stage.Stage;
 
 public class Main extends Application {
 
