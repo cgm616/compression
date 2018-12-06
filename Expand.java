@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -33,6 +34,7 @@ public class Expand extends ColdenTab {
 
         Huffman expander = Huffman.deserialize(tree);
         byte[] outputData = expander.expand(body);
+        expander.writeToGraph(new File("expand.dot").toPath());
 
         System.out.println("Output data length: " + outputData.length);
 

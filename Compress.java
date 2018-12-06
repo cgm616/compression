@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
@@ -22,6 +23,8 @@ public class Compress extends ColdenTab {
         }
 
         Huffman compressor = new Huffman(inputData);
+
+        compressor.writeToGraph(new File("compress.dot").toPath());
 
         byte[] outputBody = compressor.compress(inputData);
 
