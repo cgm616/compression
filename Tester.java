@@ -50,6 +50,7 @@ public class Tester {
         assert !second.get(5);
         assert second.get(6);
         assert second.get(7);
+
         assert !second.get(8);
         assert !second.get(9);
 
@@ -64,10 +65,75 @@ public class Tester {
         assert !second.get(5);
         assert second.get(6);
         assert second.get(7);
+
         assert !second.get(8);
         assert !second.get(9);
         assert !second.get(10);
         assert second.get(11);
 
+        second.pushByte((byte) 0x76); // 12, 13, 14, 15, 16, 17, 18, 19, 20: { 0b10111011, 0b00010111, 0b01100000 }
+
+        assert second.get(0);
+        assert !second.get(1);
+        assert second.get(2);
+        assert second.get(3);
+        assert second.get(4);
+        assert !second.get(5);
+        assert second.get(6);
+        assert second.get(7);
+
+        assert !second.get(8);
+        assert !second.get(9);
+        assert !second.get(10);
+        assert second.get(11);
+        assert !second.get(12);
+        assert second.get(13);
+        assert second.get(14);
+        assert second.get(15);
+
+        assert !second.get(16);
+        assert second.get(17);
+        assert second.get(18);
+        assert !second.get(19);
+
+        second.push(false);
+        second.push(true);
+        second.push(false);
+        second.push(true);
+
+        second.pushByte((byte) 0x76); // { 0b10111011, 0b00010111, 0b01100101, 0b01110110 }
+
+        assert !second.get(16);
+        assert second.get(17);
+        assert second.get(18);
+        assert !second.get(19);
+        assert !second.get(20);
+        assert second.get(21);
+        assert !second.get(22);
+        assert second.get(23);
+
+        assert !second.get(24);
+        assert second.get(25);
+        assert second.get(26);
+        assert second.get(27);
+        assert !second.get(28);
+        assert second.get(29);
+        assert second.get(30);
+        assert !second.get(31);
+
+        second.push(true); // { 0b10111011, 0b00010111, 0b01100101, 0b01110110, 0b10000000 }
+
+        assert !second.get(24);
+        assert second.get(25);
+        assert second.get(26);
+        assert second.get(27);
+        assert !second.get(28);
+        assert second.get(29);
+        assert second.get(30);
+        assert !second.get(31);
+
+        assert second.get(32);
+
+        assert second.readByte(24) == 0b01110110;
     }
 }
