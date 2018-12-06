@@ -45,7 +45,7 @@ public class BitArray {
 
     public void push(boolean value) {
         if (this.bitLength + 1 > this.back.size() * 8) {
-            this.back.add((byte) 0);
+            this.back.add((byte) 0x00);
         }
 
         int last = (int) this.back.get(this.back.size() - 1);
@@ -64,18 +64,29 @@ public class BitArray {
     }
 
     public void pushByte(byte value) {
-        int capacity = this.back.size() * 8;
-        int offset = capacity - this.bitLength;
+        // int capacity = this.back.size() * 8;
+        // int offset = capacity - this.bitLength;
 
-        if (offset == 0) {
-            this.back.add(value);
-        } else {
-            int last = (int) this.back.get(this.back.size() - 1);
-            last = last | (value >> (8 - offset));
-            this.back.set(this.back.size() - 1, (byte) last);
-            this.back.add((byte) (value << offset));
+        // if (offset == 0) {
+        // this.back.add(value);
+        // } else {
+        // int last = (int) this.back.get(this.back.size() - 1) & 0xFF;
+        // last = last | (value >> (8 - offset)) & 0xFF;
+        // this.back.set(this.back.size() - 1, (byte) last);
+        // this.back.add((byte) (value << offset));
+        // }
+        // this.bitLength += 8;
+
+        int toAdd = (int) value & 0xFF;
+
+        for (int i = 0; i < 8; i++) {
+            int mask = 1 << (7 - i);
+            if ((toAdd & mask) != 0) {
+                push(true);
+            } else {
+                push(false);
+            }
         }
-        this.bitLength += 8;
     }
 
     public void pushInt(int value) {
@@ -127,5 +138,21 @@ public class BitArray {
         ret |= (int) this.back.get(index + 3) & 0xFF;
 
         return ret;
+    }
+
+    public Byte readByte(int bitIndex) {
+        if (bitIndex + 7 >= this.bitLength) {
+            return null;
+        }
+
+        int value = 0;
+        for (int i = 0; i < 8; i++) {
+            if (get(bitIndex + i)) {
+                int mask = 1 << (7 - i);
+                value = value | mask;
+            }
+        }
+
+        return (byte) value;
     }
 }
