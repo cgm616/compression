@@ -26,7 +26,6 @@ public class Artifact {
         int index = 4;
 
         while (true) {
-            System.out.println("Infinite loop!");
             if (index + 2 >= bytes.length) {
                 return null; // TODO: error handling
                 // This should occur when the marker never exists.
@@ -52,7 +51,7 @@ public class Artifact {
             ret[header.length + i] = body[i];
         }
 
-        return new Artifact(ret, header.length + 4);
+        return new Artifact(ret, header.length - 3);
     }
 
     private static byte[] buildHeader(Huffman tree) {
