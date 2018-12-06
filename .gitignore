@@ -1,3 +1,5 @@
+*.dot
+*.pdf
 .DS_Store
 *.112
 Makefile
