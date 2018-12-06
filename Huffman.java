@@ -1,3 +1,10 @@
+import java.io.BufferedWriter;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map.Entry;
@@ -209,6 +216,45 @@ public class Huffman {
         return ret;
     }
 
+    public void writeToGraph(Path path) {
+        try (Writer writer = new BufferedWriter(
+                new OutputStreamWriter(new FileOutputStream(path.toString()), StandardCharsets.UTF_8))) {
+            writer.write("digraph HT {\n");
+
+            writeToGraphInternal(writer, this.top);
+            writer.write("}\n");
+            writer.flush();
+        } catch (IOException ex) {
+            // Handle me
+        }
+    }
+
+    private void writeToGraphInternal(Writer writer, Node head) throws IOException {
+        // abc [fillcolor = red]
+        if (head.values.length == 1) {
+            String label = "0x" + Integer.toHexString((int) head.values[0]);
+            if (head.weight != null) {
+                label += ": " + head.weight;
+            }
+
+            writer.write("\"" + head.toString() + "\" [ label = \"" + label + "\" ];\n");
+        } else {
+            // This is an internal node
+            String label = "";
+            if (head.weight != null) {
+                label += head.weight;
+            }
+
+            writer.write("\"" + head.toString() + "\" [ label = \"" + label + "\" ];\n");
+
+            writer.write("\"" + head.toString() + "\" -> \"" + head.left.toString() + "\" [ label = 0 ];\n");
+            writeToGraphInternal(writer, head.left);
+
+            writer.write("\"" + head.toString() + "\" -> \"" + head.right.toString() + "\" [ label = 1 ];\n");
+            writeToGraphInternal(writer, head.right);
+        }
+    }
+
     static class Node implements Comparable<Node> {
         public Node left;
         public Node right;
@@ -233,7 +279,8 @@ public class Huffman {
         }
 
         public String toString() {
-            return "weight: " + this.weight + ", values: " + this.values;
+            String full = super.toString();
+            return full.substring(full.indexOf("@") + 1, full.length());
         }
     }
 }
