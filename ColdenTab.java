@@ -108,6 +108,10 @@ public class ColdenTab {
         return this.grid;
     }
 
+    public void log(String log) {
+        // This is a stub
+    }
+
     private FileChooser createInputChooser() {
         return this.fileChooser;
     }
