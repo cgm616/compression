@@ -109,20 +109,13 @@ public class Huffman {
             newIndex += 1;
 
             if (newIndex + 7 > bits.length()) {
+                System.out.println("Returning early: " + newIndex);
                 return newIndex;
-            }
-
-            int value = 0;
-
-            for (int i = 0; i < 8; i++) {
-                if (bits.get(newIndex + i)) {
-                    int mask = 1 << i;
-                    value = value | mask;
-                }
+                // This should never happen due to the recursion method.
             }
 
             head.values = new byte[1];
-            head.values[0] = (byte) value;
+            head.values[0] = bits.readByte(newIndex);
 
             newIndex += 8;
 
@@ -131,26 +124,18 @@ public class Huffman {
     }
 
     public byte[] serialize() {
-        ArrayList<Boolean> bits = new ArrayList<Boolean>();
+        BitArray bits = new BitArray();
         serializeInternal(this.top, bits);
-        return bytesFromBits(bits);
+        return bits.toArray();
     }
 
-    private void serializeInternal(Node n, ArrayList<Boolean> output) {
+    private void serializeInternal(Node n, BitArray output) {
         if (n.values.length == 1) {
-            output.add(false);
-            int value = (int) n.values[0];
-            for (int i = 0; i < 8; i++) {
-                if (value % 2 == 0) {
-                    output.add(false);
-                } else {
-                    output.add(true);
-                }
-                value = value >> 1;
-            }
+            output.push(false);
+            output.pushByte(n.values[0]);
             return;
         } else {
-            output.add(true);
+            output.push(true);
             serializeInternal(n.left, output);
             serializeInternal(n.right, output);
         }
@@ -187,29 +172,6 @@ public class Huffman {
         }
 
         return output.toArray();
-    }
-
-    private static byte[] bytesFromBits(ArrayList<Boolean> bits) {
-        int len = (bits.size() / 8) + 1;
-
-        byte[] ret = new byte[len];
-        int next = 0;
-
-        for (int i = 0; i < bits.size(); i++) {
-            if (bits.get(i)) {
-                int mask = 1 << (7 - (i % 8));
-                next = next | mask;
-            }
-
-            if (i % 8 == 7) {
-                ret[i / 8] = (byte) next;
-                next = 0;
-            }
-        }
-
-        ret[len - 1] = (byte) next;
-
-        return ret;
     }
 
     public byte[] expand(byte[] input) {
