@@ -120,11 +120,11 @@ public class BitArray {
 
     public Integer getInt(int bitIndex) {
         if (bitIndex % 8 != 0) {
-            return null;
+            throw new ArrayIndexOutOfBoundsException("Index is not byte-aligned");
         }
 
         if (bitIndex + 31 >= this.bitLength) {
-            return null;
+            throw new ArrayIndexOutOfBoundsException();
         }
 
         int index = bitIndex / 8;
@@ -142,7 +142,7 @@ public class BitArray {
 
     public Byte readByte(int bitIndex) {
         if (bitIndex + 7 >= this.bitLength) {
-            return null;
+            throw new ArrayIndexOutOfBoundsException();
         }
 
         int value = 0;

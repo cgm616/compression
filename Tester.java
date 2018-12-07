@@ -1,12 +1,12 @@
 import java.util.Arrays;
 
 public class Tester {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
         testArtifact();
         testBitArray();
     }
 
-    public static void testArtifact() {
+    public static void testArtifact() throws Exception {
         byte[] input = { 0x31, 0x41, 0x59, 0x26, 0x00, 0x00, 0x00, (byte) 0xFF, (byte) 0xFF, (byte) 0xFF, 0x00, 0x00,
                 0x00, 0x01, 0x00 };
         byte[] body = { 0x00, 0x00, 0x00, 0x01, 0x00 };
@@ -19,7 +19,7 @@ public class Tester {
         assert Arrays.equals(art.getSerializedTree(), tree);
     }
 
-    public static void testBitArray() {
+    public static void testBitArray() throws Exception {
         BitArray first = new BitArray();
         first.pushInt(0x77777777);
         for (int i = 0; i < 32; i++) {

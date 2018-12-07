@@ -1,10 +1,5 @@
-import java.io.BufferedWriter;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map.Entry;
@@ -14,7 +9,7 @@ import java.util.TreeMap;
 public class Huffman {
     private Node top;
 
-    public Huffman(byte[] input) {
+    public Huffman(byte[] input) throws Exception {
         this.top = build(input);
     }
 
@@ -22,9 +17,9 @@ public class Huffman {
         this.top = top;
     }
 
-    private Node build(byte[] input) {
+    private Node build(byte[] input) throws Exception {
         if (input.length < 1) {
-            return null; // TODO: make this real error handling
+            throw new Exception("The input has no bytes");
         }
 
         TreeMap<Byte, Integer> map = new TreeMap<Byte, Integer>();
@@ -73,21 +68,22 @@ public class Huffman {
             }
         }
 
-        return null; // This should never happen, but make it real error handling if it does
+        throw new Exception("Reached the end of Huffman.build without returning a node");
     }
 
-    public static Huffman deserialize(byte[] input) {
+    public static Huffman deserialize(byte[] input) throws Exception {
         BitArray bits = BitArray.fromBytes(input);
         Node head = new Node(null, null);
         deserializeInternal(head, 0, bits);
         return new Huffman(head);
     }
 
-    private static int deserializeInternal(Node head, int bitIndex, BitArray bits) {
+    private static int deserializeInternal(Node head, int bitIndex, BitArray bits) throws Exception {
         int newIndex = bitIndex;
 
         if (bitIndex > bits.length()) {
-            return 0; // This should never happen.
+            // This should never happen.
+            throw new Exception("Tried to deserialize past the end of the available data");
         }
 
         if (bits.get(bitIndex)) {
@@ -148,16 +144,16 @@ public class Huffman {
         }
     }
 
-    public byte[] compress(byte[] input) {
+    public byte[] compress(byte[] input) throws Exception {
         BitArray output = new BitArray();
-        System.out.println("Compressing length: " + input.length);
+
         output.pushInt(input.length);
 
         for (byte b : input) {
             Node parent = this.top;
 
             if (Arrays.binarySearch(parent.values, b) < 0) {
-                return null; // TODO: error handling
+                throw new Exception("Byte in input data not found in tree");
             }
 
             while (true) {
@@ -172,8 +168,7 @@ public class Huffman {
                     output.push(true);
                     parent = parent.right;
                 } else {
-                    return null; // TODO: error handling
-                    // This is a malformed tree
+                    throw new Exception("Byte found in parent node not found in either child");
                 }
             }
         }
@@ -185,7 +180,6 @@ public class Huffman {
         BitArray bits = BitArray.fromBytes(input);
         ArrayList<Byte> output = new ArrayList<Byte>(2 * input.length);
         int length = bits.getInt(0);
-        System.out.println("Looking for " + length + " bytes");
 
         int i = 32;
         int bytesOutput = 0;
@@ -216,23 +210,17 @@ public class Huffman {
         return ret;
     }
 
-    public void writeToGraph(Path path) {
-        try (Writer writer = new BufferedWriter(
-                new OutputStreamWriter(new FileOutputStream(path.toString()), StandardCharsets.UTF_8))) {
-            writer.write("digraph HT {\n");
-
-            writeToGraphInternal(writer, this.top);
-            writer.write("}\n");
-            writer.flush();
-        } catch (IOException ex) {
-            // Handle me
-        }
+    public void writeToGraph(Writer writer) throws IOException {
+        writer.write("digraph HT {\n");
+        writeToGraphInternal(writer, this.top);
+        writer.write("}\n");
+        writer.flush();
     }
 
     private void writeToGraphInternal(Writer writer, Node head) throws IOException {
         // abc [fillcolor = red]
         if (head.values.length == 1) {
-            String label = "0x" + Integer.toHexString((int) head.values[0]);
+            String label = "0x" + String.format("%02X", head.values[0]);
             if (head.weight != null) {
                 label += ": " + head.weight;
             }

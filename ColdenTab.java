@@ -110,7 +110,7 @@ public class ColdenTab {
     }
 
     public void log(String message, Level prio) {
-        // This is a stub
+        System.out.println("[ " + prio.getName() + " ]: " + message);
     }
 
     private FileChooser createInputChooser() {

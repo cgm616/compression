@@ -16,18 +16,19 @@ public class Artifact {
         this.markerIndex = markerIndex;
     }
 
-    public static Artifact fromBytes(byte[] bytes) {
-        if (bytes.length < 7) {
-            return null; // TODO: this is an error case.
-            // No artifact should ever be less than 7 bytes, which is the minimum
-            // due to the magic number, the version, and the header end marker.
+    public static Artifact fromBytes(byte[] bytes) throws Exception {
+        if (bytes.length <= 10) {
+            throw new Exception("Not enough bytes to parse file");
+            // No artifact should ever be less than 10 bytes, which is the minimum
+            // due to the magic number (2), the version (2), the tree (min 2), the header
+            // end marker (3), and the compressed file (min 1).
         }
 
         int index = 4;
 
         while (true) {
             if (index + 2 >= bytes.length) {
-                return null; // TODO: error handling
+                throw new Exception("File header end marker doesn't exist");
                 // This should occur when the marker never exists.
             }
 
@@ -77,15 +78,11 @@ public class Artifact {
         return Arrays.copyOfRange(this.bytes, 3 + this.markerIndex, this.bytes.length);
     }
 
-    public void writeToPath(Path path) {
+    public void writeToPath(Path path) throws IOException {
         writeBytes(path, this.bytes);
     }
 
-    public static void writeBytes(Path path, byte[] bytes) {
-        try {
-            Files.write(path, bytes, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
-        } catch (IOException e) {
-            System.out.println("There was an error"); // TODO: make this better
-        }
+    public static void writeBytes(Path path, byte[] bytes) throws IOException {
+        Files.write(path, bytes, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
     }
 }
