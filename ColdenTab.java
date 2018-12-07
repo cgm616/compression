@@ -1,6 +1,5 @@
 import java.io.File;
-import java.util.logging.Handler;
-import java.util.logging.LogRecord;
+import java.util.logging.Level;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,7 +12,7 @@ import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-public class ColdenTab extends Handler {
+public class ColdenTab {
     Stage stage;
 
     File input;
@@ -110,6 +109,10 @@ public class ColdenTab extends Handler {
         return this.grid;
     }
 
+    public void log(String message, Level prio) {
+        // This is a stub
+    }
+
     private FileChooser createInputChooser() {
         return this.fileChooser;
     }
@@ -118,21 +121,4 @@ public class ColdenTab extends Handler {
         return this.fileChooser;
     }
 
-    @Override
-    public void publish(LogRecord record) {
-        String log = "[" + record.getLevel().getName() + "]: " + record.getMessage();
-        sendToUI(log);
-    }
-
-    public void sendToUI(String log) {
-        // This is a stub to eventually send info places
-    }
-
-    @Override
-    public void flush() {
-    }
-
-    @Override
-    public void close() throws SecurityException {
-    }
 }
