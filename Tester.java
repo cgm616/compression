@@ -4,6 +4,7 @@ public class Tester {
     public static void main(String[] args) throws Exception {
         testArtifact();
         testBitArray();
+        testHuffman();
     }
 
     public static void testArtifact() throws Exception {
@@ -135,5 +136,18 @@ public class Tester {
         assert second.get(32);
 
         assert second.readByte(24) == 0b01110110;
+    }
+
+    public static void testHuffman() throws Exception {
+        byte[] input = { 0x00, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x02, 0x02, 0x03 };
+
+        Huffman tree = new Huffman(input);
+
+        byte[] output = tree.compress(input);
+
+        byte[] reexpanded = tree.expand(output);
+
+        assert Arrays.equals(reexpanded, input);
+        assert output.length > 4;
     }
 }
