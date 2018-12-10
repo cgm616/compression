@@ -70,15 +70,12 @@ public class ColdenTab {
         this.grid.getChildren().add(temp);
 
         GridPane.setConstraints(this.inputButton, 1, 0);
-        GridPane.setHgrow(this.inputButton, Priority.ALWAYS);
         this.grid.getChildren().add(this.inputButton);
 
         GridPane.setConstraints(this.inputText, 0, 1);
-        // GridPane.setHgrow(this.inputText, Priority.ALWAYS);
         this.grid.getChildren().add(this.inputText);
 
         GridPane.setConstraints(this.clearInputButton, 1, 1);
-        GridPane.setHgrow(this.clearInputButton, Priority.ALWAYS);
         this.grid.getChildren().add(this.clearInputButton);
 
         temp = new Label("Output");
@@ -86,15 +83,12 @@ public class ColdenTab {
         this.grid.getChildren().add(temp);
 
         GridPane.setConstraints(this.outputButton, 1, 2);
-        GridPane.setHgrow(this.outputButton, Priority.ALWAYS);
         this.grid.getChildren().add(this.outputButton);
 
         GridPane.setConstraints(this.outputText, 0, 3);
-        // GridPane.setHgrow(this.outputText, Priority.ALWAYS);
         this.grid.getChildren().add(this.outputText);
 
         GridPane.setConstraints(this.clearOutputButton, 1, 3);
-        GridPane.setHgrow(this.clearOutputButton, Priority.ALWAYS);
         this.grid.getChildren().add(this.clearOutputButton);
 
         temp = new Label("Options");
