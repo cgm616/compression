@@ -1,6 +1,8 @@
 import java.io.File;
 import java.util.logging.Level;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -226,6 +228,13 @@ public class ColdenTab {
             public void handle(final ActionEvent e) {
                 outputText.setText(""); // Log is now emptied
                 output = null;
+            }
+        });
+
+        this.log.textProperty().addListener(new ChangeListener<Object>() {
+            @Override
+            public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+                log.setScrollTop(Double.MAX_VALUE);
             }
         });
     }
