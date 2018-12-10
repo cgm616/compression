@@ -32,6 +32,11 @@ public class Main extends Application {
 
         // Setting title to the Stage
         stage.setTitle("Colden");
+		
+		// Restricting minimum size of window
+		// TODO: Make tab content scale to window size
+		stage.setMinWidth(400);
+		stage.setMinHeight(400);
 
         // Adding scene to the stage
         stage.setScene(scene);
