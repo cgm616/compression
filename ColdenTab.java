@@ -184,7 +184,7 @@ public class ColdenTab {
                 if (input != null && output != null) {
                     run();
                 } else {
-                    // TODO: show error
+                    log("Please select an input and output file before running Colden.", Level.SEVERE);
                 }
             }
         });
