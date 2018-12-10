@@ -200,7 +200,8 @@ public class ColdenTab {
              * @return nothing.
              */
             public void handle(final ActionEvent e) {
-                inputText.setText(""); // No selected input file exists now
+                inputText.setText(""); // Log is now emptied
+                input = null;
             }
         });
 
@@ -223,7 +224,8 @@ public class ColdenTab {
         this.clearLog.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent e) {
-                log.setText(""); // Log is now emptied
+                outputText.setText(""); // Log is now emptied
+                output = null;
             }
         });
     }
