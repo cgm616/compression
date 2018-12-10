@@ -7,6 +7,8 @@ import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import javafx.scene.control.Label;
+import javafx.scene.control.CheckBox;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Priority;
 import javafx.stage.FileChooser;
@@ -27,6 +29,8 @@ public class ColdenTab {
     Button inputButton;
     Button outputButton;
     Button runButton;
+	
+	CheckBox saveGraph;
 
     public ColdenTab(Stage stage) {
         makeGUI(stage);
@@ -39,9 +43,10 @@ public class ColdenTab {
         this.fileChooser = new FileChooser();
         this.inputText = new TextField();
         this.outputText = new TextField();
-        this.inputButton = new Button("Select input file");
-        this.outputButton = new Button("Select output file");
+        this.inputButton = new Button("Choose file");
+        this.outputButton = new Button("Choose file");
         this.runButton = new Button("Run Colden");
+		this.saveGraph = new CheckBox("Save Huffman Tree Graph");
 
         this.grid.setPadding(new Insets(10, 10, 10, 10));
         this.grid.setVgap(5);
@@ -49,22 +54,38 @@ public class ColdenTab {
 
         this.inputText.setDisable(true);
         this.outputText.setDisable(true);
-
-        GridPane.setConstraints(this.inputButton, 0, 0);
+		
+		// Adding objects to GridPane
+		Label temp = new Label("Input");
+		GridPane.setConstraints(temp, 0, 0);
+		this.grid.getChildren().add(temp);
+		
+        GridPane.setConstraints(this.inputButton, 1, 0);
         this.grid.getChildren().add(this.inputButton);
 
-        GridPane.setConstraints(this.outputButton, 0, 1);
-        this.grid.getChildren().add(this.outputButton);
-
-        GridPane.setConstraints(this.runButton, 0, 2);
-        this.grid.getChildren().add(this.runButton);
-
-        GridPane.setConstraints(this.inputText, 1, 0);
+		GridPane.setConstraints(this.inputText, 0, 1);
         GridPane.setHgrow(this.inputText, Priority.ALWAYS);
         this.grid.getChildren().add(this.inputText);
-
-        GridPane.setConstraints(this.outputText, 1, 1);
+		
+		temp = new Label("Output");
+		GridPane.setConstraints(temp, 0, 2);
+		this.grid.getChildren().add(temp);
+		
+        GridPane.setConstraints(this.outputButton, 1, 2);
+        this.grid.getChildren().add(this.outputButton);
+		
+		GridPane.setConstraints(this.outputText, 0, 3);
         this.grid.getChildren().add(this.outputText);
+
+        GridPane.setConstraints(this.runButton, 0, 4);
+        this.grid.getChildren().add(this.runButton);
+
+        temp = new Label("Options");
+		GridPane.setConstraints(temp, 0, 5);
+		this.grid.getChildren().add(temp);
+
+        GridPane.setConstraints(saveGraph, 0, 6);
+		this.grid.getChildren().add(saveGraph);
 
         this.inputButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
