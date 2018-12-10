@@ -35,7 +35,7 @@ public class Main extends Application {
 		
 		// Restricting minimum size of window
 		// TODO: Make tab content scale to window size
-		stage.setMinWidth(400);
+		stage.setMinWidth(500);
 		stage.setMinHeight(400);
 
         // Adding scene to the stage

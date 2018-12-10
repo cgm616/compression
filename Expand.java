@@ -59,7 +59,7 @@ public class Expand extends ColdenTab {
 
         log("Huffman tree successfully deserialized from file...", Level.INFO);
 
-        if (true) { // TODO: some checkbox for writing to a graph, as well as getting the file
+        if (this.saveGraph.isSelected()) { // TODO: some checkbox for writing to a graph, as well as getting the file
             File graphOutput = new File("expand.dot");
 
             if (graphOutput.exists()) {
