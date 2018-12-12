@@ -357,6 +357,12 @@ public class Huffman {
         // Continue decompressing while the number of bytes output is less than the
         // supposed compressed bytes in the expanded data
         while (bytesOutput < length) {
+            // Make sure we don't try to index past the end of the file. If we do, don't
+            // throw an exception and simply output what we've got so far
+            if (i >= bits.bitLength) {
+                break;
+            }
+
             // Create a Node variable to walk the tree
             Node current = this.top;
 
