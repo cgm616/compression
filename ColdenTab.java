@@ -60,20 +60,43 @@ public class ColdenTab {
         // Defining fields - all fields are used in creating the GUI
         this.stage = stage;
 
+        // The parent element for all of the GUI
         this.grid = new GridPane();
+
+        // A handler for getting files from the OS
         this.fileChooser = new FileChooser();
+
+        // The location of the input and output files
         this.inputText = new TextField();
         this.outputText = new TextField();
+
+        // The buttons to choose the input and output files
         this.inputButton = new Button("Choose file");
         this.outputButton = new Button("Choose file");
+
+        // The button to run the current operation
         this.runButton = new Button("Run Colden");
+
+        // The buttons to clear the input and output files
         this.clearInputButton = new Button("Clear");
         this.clearOutputButton = new Button("Clear");
+
+        // The button to clear the log window
         this.clearLog = new Button("Clear");
+
+        // The button to clear the location of the saved graph, if one is saved
         this.clearTreeLocation = new Button("Clear");
+
+        // The button to select a file to save the visualization into
         this.treeButton = new Button("Choose file");
+
+        // The textarea to hold log output
         this.log = new TextArea();
+
+        // The checkbox to choose if graphs are saved or not
         this.saveGraph = new CheckBox("Save Huffman Tree Graph");
+
+        // The box to show where the graph is going to be saved
         this.treeLocation = new TextField();
 
         // Set spacing of grid, so that objects are visually distinct and neat-looking
