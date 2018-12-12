@@ -44,7 +44,7 @@ public class Compress extends ColdenTab {
         log("Huffman tree successfully constructed...", Level.INFO);
 
         if (this.saveGraph.isSelected()) { // TODO: some checkbox for writing to a graph, as well as getting the file
-            File graphOutput = new File("compress.pdf");
+            File graphOutput = new File(this.tree.getPath().substring(0, this.tree.getPath().length() - 3) + "pdf");
 
             if (graphOutput.exists()) {
                 log("Graph output file already exists. Graph will not be written.", Level.WARNING);
