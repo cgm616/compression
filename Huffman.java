@@ -2,9 +2,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Map.Entry;
 import java.util.PriorityQueue;
-import java.util.TreeMap;
 
 /**
  * A representation of a Huffman tree, holding possible values and weights. It
@@ -16,7 +14,7 @@ public class Huffman {
 
     /**
      * This method uses a byte array to construct a Huffman tree according to the
-     * bytes present.
+     * bytes present
      * 
      * @param input The byte array input containing every character the tree must
      *              know
@@ -32,7 +30,7 @@ public class Huffman {
 
     /**
      * Given a node, this constructor makes a new instance of Huffman with that node
-     * as its head.
+     * as its head
      * 
      * @param top The node to become the head of the tree
      * @return A tree with the node given set as the head
@@ -60,21 +58,16 @@ public class Huffman {
             throw new Exception("The input has no bytes");
         }
 
-        // Next, we map byte keys -> frequencies in the file
-        TreeMap<Byte, Integer> map = new TreeMap<Byte, Integer>();
+        // Create a new map, of sorts. The byte index into the array is the key, and the
+        // value at that index is the value. Java automatically inits array elements to
+        // 0, so this is an array of all 0s right now
+        int[] frequencies = new int[256];
 
+        // Iterate over the input to get a list of byte frequencies
         for (byte b : input) {
-            // Iterate over the input and check if the map already contains the current byte
-            // or not
-            if (map.containsKey(b)) {
-                // If it does, increment the frequency stored in the map
-                Integer frequency = map.get(b) + 1;
-                map.put(b, frequency);
-            } else {
-                // If not, put the byte -> frequency pair into the map with an initial frequency
-                // of 1
-                map.put(b, 1);
-            }
+            // Grab the frequency for the current byte and increment it. If it is 0, it
+            // becomes 1. If it's something else, it increments
+            frequencies[b & 0xFF] = frequencies[b & 0xFF] + 1;
         }
 
         // Now, we construct a priority queue to order the Nodes while constructing a
@@ -82,21 +75,26 @@ public class Huffman {
         // them
         PriorityQueue<Node> queue = new PriorityQueue<Node>();
 
-        while (!map.isEmpty()) {
-            // While there are still byte -> frequency pairs in the map, remove one and
-            // extract its key and value
-            Entry<Byte, Integer> e = map.pollFirstEntry();
-            // Create a new byte array of length one and set its only index to the key of
-            // the mapping. This is the value that the newly constructed Node will represent
-            byte[] values = new byte[1];
-            values[0] = e.getKey();
-            // Allocate a new Node using the byte array from the last step and the frequency
-            // as its weight
-            Node node = new Node(values, (int) e.getValue());
-            // Add the node to the priority queue
-            queue.add(node);
+        // Iterate over every possible byte value
+        for (int i = 0; i < 256; i++) {
+            // For each one, grab the frequency from the array
+            int freq = frequencies[i];
+            // If that frequency is greater than 0 (the byte shows up in the input), we need
+            // to include that value as a Node
+            if (freq > 0) {
+                // We create a new byte array containing possible values (only one, because this
+                // is a leaf node)
+                byte[] values = new byte[1];
+                // Add the current byte to that array
+                values[0] = (byte) i;
+                // Create a new Node from the values and the weight, with no children
+                Node node = new Node(values, (int) freq);
+                // Add that Node to the priority queue
+                queue.add(node);
+            }
         }
 
+        // Next, we actually construct the tree based on the priority queue
         while (!queue.isEmpty()) {
             // While there is still at least one Node in the queue, take it out
             Node last = queue.poll();
@@ -477,7 +475,7 @@ public class Huffman {
 
     /**
      * A node of the Huffman tree, containing two children, a weight, and a list of
-     * values
+     * values.
      */
     static class Node implements Comparable<Node> {
         // The left child of the Node
