@@ -281,8 +281,7 @@ public class ColdenTab {
         this.clearLog.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent e) {
-                outputText.setText(""); // Log is now emptied
-                output = null;
+                log.setText(""); // Log is now emptied
             }
         });
 
