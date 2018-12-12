@@ -22,7 +22,8 @@ public class Main extends Application {
         Compress compress = new Compress(stage);
         Expand expand = new Expand(stage);
 
-        // Generating the GUI Tabs for compression and expansion
+        // Generating the GUI Tabs for compression and expansion. These are where all of
+        // the logic happens
         Tab compressTab = createTab("Compress", compress.render());
         Tab expandTab = createTab("Expand", expand.render());
 
