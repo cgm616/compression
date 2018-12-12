@@ -13,6 +13,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -140,29 +141,33 @@ public class ColdenTab {
         GridPane.setConstraints(this.clearOutputButton, 1, 3);
         this.grid.getChildren().add(this.clearOutputButton);
 
+        this.grid.addRow(4, new Text(""));
+
         temp = new Label("Options");
-        GridPane.setConstraints(temp, 0, 4);
+        GridPane.setConstraints(temp, 0, 5);
         this.grid.getChildren().add(temp);
 
-        GridPane.setConstraints(saveGraph, 0, 5);
+        GridPane.setConstraints(saveGraph, 0, 6);
         this.grid.getChildren().add(saveGraph);
 
-        GridPane.setConstraints(treeButton, 1, 5);
+        GridPane.setConstraints(treeButton, 1, 6);
         this.grid.getChildren().add(treeButton);
 
-        GridPane.setConstraints(treeLocation, 0, 6);
+        GridPane.setConstraints(treeLocation, 0, 7);
         this.grid.getChildren().add(treeLocation);
 
-        GridPane.setConstraints(clearTreeLocation, 1, 6);
+        GridPane.setConstraints(clearTreeLocation, 1, 7);
         this.grid.getChildren().add(clearTreeLocation);
 
-        GridPane.setConstraints(this.runButton, 0, 7);
+        this.grid.addRow(8, new Text(""));
+
+        GridPane.setConstraints(this.runButton, 0, 9);
         this.grid.getChildren().add(this.runButton);
 
-        GridPane.setConstraints(this.log, 0, 8);
+        GridPane.setConstraints(this.log, 0, 10);
         this.grid.getChildren().add(this.log);
 
-        GridPane.setConstraints(this.clearLog, 1, 8);
+        GridPane.setConstraints(this.clearLog, 1, 10);
         this.grid.getChildren().add(this.clearLog);
         // End of adding objects to grid.
 
