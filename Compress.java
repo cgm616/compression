@@ -13,7 +13,7 @@ public class Compress extends ColdenTab {
 
     @Override
     public void run() {
-        log("Running compression... (input: " + this.input.getPath() + ", output:" + this.output.getPath() + ")",
+        log("Running compression... (input: " + this.input.getPath() + ", output: " + this.output.getPath() + ")",
                 Level.INFO);
 
         byte[] inputData;

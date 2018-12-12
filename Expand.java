@@ -13,7 +13,7 @@ public class Expand extends ColdenTab {
 
     @Override
     public void run() {
-        log("Running expansion... (input: " + this.input.getPath() + ", output:" + this.output.getPath() + ")",
+        log("Running expansion... (input: " + this.input.getPath() + ", output: " + this.output.getPath() + ")",
                 Level.INFO);
 
         byte[] inputData;
