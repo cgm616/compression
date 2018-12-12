@@ -179,7 +179,7 @@ public class Huffman {
 
         // If the supposedly valid index into the BitArray is past the end of the array,
         // throw an exception. This should never happen
-        if (bitIndex > bits.length()) {
+        if (bitIndex > bits.bitLength) {
             throw new Exception("Tried to deserialize past the end of the available data");
         }
 
@@ -222,7 +222,7 @@ public class Huffman {
 
             // Make sure we don't try to access past the end of the available data. If we
             // try to, throw an exception
-            if (newIndex + 7 > bits.length()) {
+            if (newIndex + 7 > bits.bitLength) {
                 throw new Exception("Tried to deserialize past the end of the available data");
             }
 
