@@ -17,28 +17,28 @@ public class Main extends Application {
 
         // Creating a scene object
         Scene scene = new Scene(root);
-		
-		// Instantiating Compress and Expand objects
+
+        // Instantiating Compress and Expand objects
         Compress compress = new Compress(stage);
         Expand expand = new Expand(stage);
-		
-		// Generating the GUI Tabs for compression and expansion
+
+        // Generating the GUI Tabs for compression and expansion
         Tab compressTab = createTab("Compress", compress.render());
         Tab expandTab = createTab("Expand", expand.render());
-		
-		// Organizing Tabs through a TabPane
+
+        // Organizing Tabs through a TabPane
         TabPane tabPane = new TabPane(compressTab, expandTab);
 
         HBox.setHgrow(tabPane, Priority.ALWAYS);
-		
-		// Adding the TabPane to the root
+
+        // Adding the TabPane to the root
         root.getChildren().add(tabPane);
 
         // Setting title to the Stage
         stage.setTitle("Colden");
-		
-		// Window cannot be resized
-		stage.setResizable(false);
+
+        // Window cannot be resized
+        stage.setResizable(false);
 
         // Adding scene to the stage
         stage.setScene(scene);
@@ -52,17 +52,18 @@ public class Main extends Application {
     public static void main(String args[]) {
         launch(args);
     }
-	/**
-	* Used to generate and format the "Compress" and "Expand" tabs
-	*			of the GUI.
-	* @param name - this parameter holds the label of the tab when
-	*			displayed on-screen.
-	* @param content - this parameter holds an object that contains
-	*			the elements that will be displayed. For the purposes
-	*			of the project, it will always take a GridPane.
-	* @return Tab - The method creates a Tab with the specified 
-	*			values, then returns it.
-	*/
+
+    /**
+     * Used to generate and format the "Compress" and "Expand" tabs of the GUI.
+     * 
+     * @param name    - this parameter holds the label of the tab when displayed
+     *                on-screen.
+     * @param content - this parameter holds an object that contains the elements
+     *                that will be displayed. For the purposes of the project, it
+     *                will always take a GridPane.
+     * @return Tab - The method creates a Tab with the specified values, then
+     *         returns it.
+     */
     private Tab createTab(String name, Node content) {
         Tab tab = new Tab();
         tab.setClosable(false);
