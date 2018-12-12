@@ -289,7 +289,8 @@ public class ColdenTab {
         this.log.textProperty().addListener(new ChangeListener<Object>() {
             @Override
             public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-                log.setScrollTop(Double.MAX_VALUE);
+                log.selectPositionCaret(log.getLength());
+                log.deselect();
             }
         });
     }
