@@ -21,14 +21,14 @@ public class ColdenTab {
 
     File input;
     File output;
-	File tree;
+    File tree;
 
     GridPane grid;
     FileChooser fileChooser;
 
     TextField inputText;
     TextField outputText;
-	TextField treeLocation;
+    TextField treeLocation;
 
     Button inputButton;
     Button outputButton;
@@ -36,8 +36,8 @@ public class ColdenTab {
     Button clearInputButton;
     Button clearOutputButton;
     Button clearLog;
-	Button clearTreeLocation;
-	Button treeButton;
+    Button clearTreeLocation;
+    Button treeButton;
     CheckBox saveGraph;
     TextArea log;
 
@@ -70,11 +70,11 @@ public class ColdenTab {
         this.clearInputButton = new Button("Clear");
         this.clearOutputButton = new Button("Clear");
         this.clearLog = new Button("Clear");
-		this.clearTreeLocation = new Button("Clear");
-		this.treeButton = new Button("Choose file");
+        this.clearTreeLocation = new Button("Clear");
+        this.treeButton = new Button("Choose file");
         this.log = new TextArea();
         this.saveGraph = new CheckBox("Save Huffman Tree Graph");
-		this.treeLocation = new TextField();
+        this.treeLocation = new TextField();
 
         // Set spacing of grid, so that objects are visually distinct and neat-looking
         this.grid.setPadding(new Insets(10, 10, 10, 10)); // grid is contained by 10 pixels of empty space on all 4
@@ -84,7 +84,7 @@ public class ColdenTab {
 
         this.inputText.setEditable(false);
         this.outputText.setEditable(false);
-		this.treeLocation.setEditable(false);
+        this.treeLocation.setEditable(false);
         this.log.setWrapText(true);
         this.log.setEditable(false);
 
@@ -123,16 +123,16 @@ public class ColdenTab {
 
         GridPane.setConstraints(saveGraph, 0, 5);
         this.grid.getChildren().add(saveGraph);
-		
-		GridPane.setConstraints(treeButton, 1, 5);
-		this.grid.getChildren().add(treeButton);
-		
-		GridPane.setConstraints(treeLocation, 0, 6);
-		this.grid.getChildren().add(treeLocation);
 
-		GridPane.setConstraints(clearTreeLocation, 1, 6);
-		this.grid.getChildren().add(clearTreeLocation);
-		
+        GridPane.setConstraints(treeButton, 1, 5);
+        this.grid.getChildren().add(treeButton);
+
+        GridPane.setConstraints(treeLocation, 0, 6);
+        this.grid.getChildren().add(treeLocation);
+
+        GridPane.setConstraints(clearTreeLocation, 1, 6);
+        this.grid.getChildren().add(clearTreeLocation);
+
         GridPane.setConstraints(this.runButton, 0, 7);
         this.grid.getChildren().add(this.runButton);
 
@@ -186,14 +186,14 @@ public class ColdenTab {
                 }
             }
         });
-		
-		// When clicked, treeButton will create a pop-up window
+
+        // When clicked, treeButton will create a pop-up window
         // to let the user select an output file
         this.treeButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             /**
-             * This method creates a FileChooser to allow the user to select a 
-             * location for the tree from File Explorer.
+             * This method creates a FileChooser to allow the user to select a location for
+             * the tree from File Explorer.
              * 
              * @param e is the only parameter, lets the method know why it's being
              *          called.(the button has been clicked)
@@ -258,10 +258,11 @@ public class ColdenTab {
              */
             public void handle(final ActionEvent e) {
                 outputText.setText(""); // No selected output file exists now
+                output = null;
             }
         });
 
-		// On click, clearTreeLocation clears the content of the treeLocation text field
+        // On click, clearTreeLocation clears the content of the treeLocation text field
         this.clearTreeLocation.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             /**
@@ -276,7 +277,7 @@ public class ColdenTab {
                 tree = null;
             }
         });
-		
+
         // On click, clearLog wipes the text stored in the log
         this.clearLog.setOnAction(new EventHandler<ActionEvent>() {
             @Override
