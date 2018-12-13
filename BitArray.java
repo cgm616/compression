@@ -148,6 +148,11 @@ public class BitArray {
         this.bitLength += 1;
     }
 
+    /**
+     * This method returns and removes the last bit added
+     * 
+     * @return The value of the last bit
+     */
     public boolean pop() {
         boolean ret = get(bitLength - 1);
         this.bitLength -= 1;
@@ -300,6 +305,11 @@ public class BitArray {
         return (byte) value;
     }
 
+    /**
+     * This method adds the bits of one BitArray to this one
+     * 
+     * @param other The BitArray to append
+     */
     public void appendBits(BitArray other) {
         for (int i = 0; i < other.bitLength; i++) {
             push(other.get(i));
