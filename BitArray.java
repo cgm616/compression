@@ -97,6 +97,9 @@ public class BitArray {
      * @param value    The value to set the bit to
      */
     public void set(int bitIndex, boolean value) {
+        if (bitIndex > bitLength) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
         // Get the byte that stores the bit we want to set from the backing array
         int storage = (int) this.back.get(bitIndex / 8);
         // Create a mask that we can use to only change the specific bit we want to
