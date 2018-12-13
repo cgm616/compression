@@ -84,44 +84,90 @@ public class Artifact {
         return new Artifact(bytes, index);
     }
 
+    /**
+     * This method takes in an a tree and a body and builds a file for outputting
+     * 
+     * @param tree The tree to serialize into the beginning
+     * @param body The compressed body
+     * @return The Artifact that contains this information
+     */
     public static Artifact build(Huffman tree, byte[] body) {
+        // Build the file header
         byte[] header = buildHeader(tree);
+
+        // Make a new array to hold the complete file info
         byte[] ret = Arrays.copyOf(header, header.length + body.length);
 
+        // Copy the body info into a new array
         for (int i = 0; i < body.length; i++) {
             ret[header.length + i] = body[i];
         }
 
+        // Create a new artifact from the data
         return new Artifact(ret, header.length - 3);
     }
 
+    /**
+     * This method takes in an a tree and builds a header
+     * 
+     * @param tree The tree to serialize into the beginning
+     * @return The bytes of the header
+     */
     private static byte[] buildHeader(Huffman tree) {
+        // Serialize the tree
         byte[] treeData = tree.serialize();
+
+        // Write the magic number into the header
         byte[] ret = Arrays.copyOf(Artifact.MAGIC, 4 + treeData.length + 3);
 
+        // Write the data of the tree into the header
         for (int i = 0; i < treeData.length; i++) {
             ret[4 + i] = treeData[i];
         }
 
+        // Add the header end markers
         ret[ret.length - 1] = Artifact.MARKER;
         ret[ret.length - 2] = Artifact.MARKER;
         ret[ret.length - 3] = Artifact.MARKER;
 
+        // Return the header
         return ret;
     }
 
+    /**
+     * This method returns the tree part of the file
+     * 
+     * @return The bytes of the tree in the header
+     */
     public byte[] getSerializedTree() {
         return Arrays.copyOfRange(this.bytes, 4, this.markerIndex);
     }
 
+    /**
+     * This method returns the compressed body of the file
+     * 
+     * @return The bytes of the body
+     */
     public byte[] getBody() {
         return Arrays.copyOfRange(this.bytes, 3 + this.markerIndex, this.bytes.length);
     }
 
+    /**
+     * This method writes the file to a given path
+     * 
+     * @param path The path to write to
+     */
     public void writeToPath(Path path) throws IOException {
         writeBytes(path, this.bytes);
     }
 
+    /**
+     * This method writes bytes to a given file
+     * 
+     * @param path  The path to write to
+     * @param bytes The bytes to write
+     * @exception IOException Thrown when the file cannot be written
+     */
     public static void writeBytes(Path path, byte[] bytes) throws IOException {
         Files.write(path, bytes, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
     }
