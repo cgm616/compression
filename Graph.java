@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * A visualization of the Huffman tree (known as a graph for the way it is rendered).
+ */
 public class Graph {
     Huffman tree;
 
