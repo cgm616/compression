@@ -7,6 +7,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.stage.Stage;
 
+/**
+ * Entry point of the application, run using JavaFX.
+ */
 public class Main extends Application {
 
     @Override
@@ -55,15 +58,12 @@ public class Main extends Application {
     }
 
     /**
-     * Used to generate and format the "Compress" and "Expand" tabs of the GUI.
+     * Used to generate and format the "Compress" and "Expand" tabs of the GUI
      * 
-     * @param name    - this parameter holds the label of the tab when displayed
-     *                on-screen.
-     * @param content - this parameter holds an object that contains the elements
-     *                that will be displayed. For the purposes of the project, it
-     *                will always take a GridPane.
-     * @return Tab - The method creates a Tab with the specified values, then
-     *         returns it.
+     * @param name    The label of the tab when displayed on-screen
+     * @param content The content that the tab will display. For the purposes of the
+     *                project, it will always take a GridPane
+     * @return A tab with the specified attributes
      */
     private Tab createTab(String name, Node content) {
         Tab tab = new Tab();

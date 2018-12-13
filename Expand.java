@@ -13,24 +13,25 @@ import javafx.stage.Stage;
  * that tab.
  */
 public class Expand extends ColdenTab {
-
     public Expand(Stage stage) {
         super(stage);
     }
 
     @Override
-    public void doOperation() {
-        log("Running expansion... (input: " + input.getPath() + ", output: " + output.getPath() + ")", Level.INFO);
+    protected void doOperation() {
+        log("Running expansion... (input: " + inputFile.getPath() + ", output: " + outputFile.getPath() + ")",
+                Level.INFO);
 
+        // Try to read the input file into memory
         byte[] inputData;
-
         try {
-            inputData = Files.readAllBytes(input.toPath());
+            inputData = Files.readAllBytes(inputFile.toPath());
         } catch (IOException e) {
             log("Input file could not be read: " + e.getMessage() + ". Aborting.", Level.SEVERE);
             return;
         }
 
+        // Make sure the input file is long enough to be valid
         if (inputData.length <= 10) {
             log("Please select an input file that is longer than 10 bytes (the minimum compressed filesize). Aborting.",
                     Level.SEVERE);
@@ -39,8 +40,8 @@ public class Expand extends ColdenTab {
             log("Expanding " + inputData.length + " bytes...", Level.INFO);
         }
 
+        // Try to parse a file from the data
         Artifact compressedData;
-
         try {
             compressedData = Artifact.fromBytes(inputData);
         } catch (Exception e) {
@@ -54,8 +55,8 @@ public class Expand extends ColdenTab {
         log("Input file successfully parsed (tree length: " + treeData.length + ", body length: " + body.length
                 + ")...", Level.INFO);
 
+        // Try to deserialize a tree from the header
         Huffman expander;
-
         try {
             expander = Huffman.deserialize(treeData);
         } catch (Exception e) {
@@ -65,13 +66,17 @@ public class Expand extends ColdenTab {
 
         log("Huffman tree successfully deserialized from file...", Level.INFO);
 
+        // If the user wants to save a graph, do that
         if (saveGraph.isSelected()) {
+            // Make sure a file was chosen
             if (graphFile == null) {
                 log("No graph output file selected. Expansion will continue.", Level.WARNING);
             } else {
+                // Make sure the file doesn't exist
                 if (graphFile.exists()) {
                     log("Graph output file already exists. Graph will not be written.", Level.WARNING);
                 } else {
+                    // Try and write the graph
                     try {
                         Graph graph = new Graph(expander);
                         graph.write(graphFile);
@@ -84,7 +89,9 @@ public class Expand extends ColdenTab {
                 }
             }
         }
-        try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(output))) {
+
+        // Try to expand the data and write it to a file
+        try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(outputFile))) {
             expander.expand(body, outStream);
             outStream.flush();
         } catch (Exception e) {
@@ -97,9 +104,10 @@ public class Expand extends ColdenTab {
     }
 
     @Override
-    public FileChooser createOutputChooser() {
-        if (input != null && input.getName().endsWith(".112")) {
-            fileChooser.setInitialFileName(input.getName().substring(0, input.getName().length() - 4));
+    protected FileChooser createOutputChooser() {
+        // Try to choose a good name based on the input
+        if (inputFile != null && inputFile.getName().endsWith(".112")) {
+            fileChooser.setInitialFileName(inputFile.getName().substring(0, inputFile.getName().length() - 4));
         }
         return fileChooser;
     }

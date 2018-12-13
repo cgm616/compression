@@ -24,29 +24,33 @@ import javafx.stage.Stage;
  * GUI-specific functionality that is common between the two.
  */
 public class ColdenTab {
-    Stage stage;
+    private Stage stage; // The JavaFX stage (needed to open fileChoosers)
 
-    File input;
-    File output;
-    File graphFile;
+    protected File inputFile; // The file to accept input from
+    protected File outputFile; // The file to output to
+    protected File graphFile; // The file to write the graph to (if enabled)
 
-    GridPane grid;
-    FileChooser fileChooser;
+    private GridPane grid; // The root GUI node for everything else
 
-    TextField inputText;
-    TextField outputText;
-    TextField treeLocation;
+    protected FileChooser fileChooser; // The instance of the class that lets us choose files
 
-    Button inputButton;
-    Button outputButton;
-    Button runButton;
-    Button clearInputButton;
-    Button clearOutputButton;
-    Button clearLog;
-    Button clearTreeLocation;
-    Button graphButton;
-    CheckBox saveGraph;
-    TextArea log;
+    private TextField inputText; // The texfield that will display the path of the input file
+    private TextField outputText; // Same for the output file
+    private TextField graphText; // Same for the graph file
+
+    private Button inputButton; // The button to choose the input
+    private Button outputButton; // Same for output
+    private Button graphButton; // Same for graph
+
+    private Button clearInputButton; // The button to reset the input
+    private Button clearOutputButton; // Same for output
+    private Button clearGraphButton; // Same for graph
+
+    protected CheckBox saveGraph; // The checkbox if saving the graph is enabled
+    private Button runButton; // The button to run the operation
+
+    private TextArea log; // The text box that shows the application log
+    private Button clearLog; // The button to clear the log
 
     // Constructor requires a Stage object
     public ColdenTab(Stage stage) {
@@ -62,69 +66,54 @@ public class ColdenTab {
      *              background for the rest of the javafx content.
      * @return Nothing.
      */
-    public void makeGUI(Stage stage) {
-
-        // Defining fields - all fields are used in creating the GUI
+    private void makeGUI(Stage stage) {
+        // Initialize all GUI elements
         this.stage = stage;
 
-        // The parent element for all of the GUI
         this.grid = new GridPane();
 
-        // A handler for getting files from the OS
         this.fileChooser = new FileChooser();
 
-        // The location of the input and output files
         this.inputText = new TextField();
         this.outputText = new TextField();
+        this.graphText = new TextField();
 
-        // The buttons to choose the input and output files
         this.inputButton = new Button("Choose file");
         this.outputButton = new Button("Choose file");
-
-        // The button to run the current operation
-        this.runButton = new Button("Run Colden");
-
-        // The buttons to clear the input and output files
-        this.clearInputButton = new Button("Clear");
-        this.clearOutputButton = new Button("Clear");
-
-        // The button to clear the log window
-        this.clearLog = new Button("Clear");
-
-        // The button to clear the location of the saved graph, if one is saved
-        this.clearTreeLocation = new Button("Clear");
-
-        // The button to select a file to save the visualization into
         this.graphButton = new Button("Choose file");
 
-        // The textarea to hold log output
-        this.log = new TextArea();
+        this.clearInputButton = new Button("Clear");
+        this.clearOutputButton = new Button("Clear");
+        this.clearGraphButton = new Button("Clear");
 
-        // The checkbox to choose if graphs are saved or not
+        this.runButton = new Button("Run Colden");
         this.saveGraph = new CheckBox("Save Huffman Tree Graph");
 
-        // The box to show where the graph is going to be saved
-        this.treeLocation = new TextField();
+        this.log = new TextArea();
+        this.clearLog = new Button("Clear");
+        // End of initialization
 
-        // Set spacing of grid, so that objects are visually distinct and neat-looking
-        this.grid.setPadding(new Insets(10, 10, 10, 10)); // grid is contained by 10 pixels of empty space on all 4
-                                                          // sides
+        // Set spacing of grid, so that objects are visually distinct and neat-looking.
+        // Grid is contained by 10 pixels of empty space on all 4 sides
+        this.grid.setPadding(new Insets(10, 10, 10, 10));
         this.grid.setVgap(5); // Gap between objects above/below each other is 5 pixels
         this.grid.setHgap(5); // Gap between objects next to each other is 5 pixels
 
+        // Make sure users cannot edit the fields used to display the file paths
         this.inputText.setEditable(false);
         this.outputText.setEditable(false);
-        this.treeLocation.setEditable(false);
+        this.graphText.setEditable(false);
+
+        // Make sure users cannot edit the log, and make it display correctly
         this.log.setWrapText(true);
         this.log.setEditable(false);
 
-        // Adding objects to GridPane
-        // This code adds the objects to the grid
-        // in the correct order
-        Label temp = new Label("Input");
+        // Add GUI elements to the GridPane in the correct location
+        Label temp = new Label("Input"); // Create a new label and add it
         GridPane.setConstraints(temp, 0, 0);
         this.grid.getChildren().add(temp);
 
+        // Add the input controls
         GridPane.setConstraints(this.inputButton, 1, 0);
         this.grid.getChildren().add(this.inputButton);
 
@@ -134,10 +123,11 @@ public class ColdenTab {
         GridPane.setConstraints(this.clearInputButton, 1, 1);
         this.grid.getChildren().add(this.clearInputButton);
 
-        temp = new Label("Output");
+        temp = new Label("Output"); // Create a new label and add it
         GridPane.setConstraints(temp, 0, 2);
         this.grid.getChildren().add(temp);
 
+        // Add the output controls
         GridPane.setConstraints(this.outputButton, 1, 2);
         this.grid.getChildren().add(this.outputButton);
 
@@ -147,24 +137,28 @@ public class ColdenTab {
         GridPane.setConstraints(this.clearOutputButton, 1, 3);
         this.grid.getChildren().add(this.clearOutputButton);
 
+        // Add a spacing row between the necessary file choosing elements and the
+        // optional graph part
         this.grid.addRow(4, new Text(""));
 
-        temp = new Label("Options");
+        temp = new Label("Options"); // Create a new label and add it
         GridPane.setConstraints(temp, 0, 5);
         this.grid.getChildren().add(temp);
 
+        // Add the graph controls
         GridPane.setConstraints(saveGraph, 0, 6);
         this.grid.getChildren().add(saveGraph);
 
         GridPane.setConstraints(graphButton, 1, 6);
         this.grid.getChildren().add(graphButton);
 
-        GridPane.setConstraints(treeLocation, 0, 7);
-        this.grid.getChildren().add(treeLocation);
+        GridPane.setConstraints(graphText, 0, 7);
+        this.grid.getChildren().add(graphText);
 
-        GridPane.setConstraints(clearTreeLocation, 1, 7);
-        this.grid.getChildren().add(clearTreeLocation);
+        GridPane.setConstraints(clearGraphButton, 1, 7);
+        this.grid.getChildren().add(clearGraphButton);
 
+        // Add another spacing row before the run button
         this.grid.addRow(8, new Text(""));
 
         GridPane.setConstraints(this.runButton, 0, 9);
@@ -181,19 +175,13 @@ public class ColdenTab {
         // to let the user select an input file
         this.inputButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            /**
-             * This method creates a FileChooser to allow the user to select an input file
-             * from File Explorer.
-             * 
-             * @param e is the only parameter, lets the method know why it's being
-             *          called.(the button has been clicked)
-             * @return nothing.
-             */
             public void handle(final ActionEvent e) {
+                // Show a new file open dialog
                 File file = fileChooser.showOpenDialog(stage);
                 if (file != null) {
-                    input = file;
-                    inputText.setText(input.getPath());
+                    // Make sure the file isn't null, then update and show the file
+                    inputFile = file;
+                    inputText.setText(inputFile.getPath());
                 }
             }
         });
@@ -202,20 +190,14 @@ public class ColdenTab {
         // to let the user select an output file
         this.outputButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            /**
-             * This method creates a FileChooser to allow the user to select an output file
-             * from File Explorer.
-             * 
-             * @param e is the only parameter, lets the method know why it's being
-             *          called.(the button has been clicked)
-             * @return nothing.
-             */
             public void handle(final ActionEvent e) {
+                // Create and show a new file save dialog
                 FileChooser chooser = createOutputChooser();
                 File file = chooser.showSaveDialog(stage);
                 if (file != null) {
-                    output = file;
-                    outputText.setText(output.getPath());
+                    // Make sure the file isn't null, then update and show the file
+                    outputFile = file;
+                    outputText.setText(outputFile.getPath());
                 }
             }
         });
@@ -224,20 +206,14 @@ public class ColdenTab {
         // to let the user select an output file
         this.graphButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            /**
-             * This method creates a FileChooser to allow the user to select a location for
-             * the tree from File Explorer.
-             * 
-             * @param e is the only parameter, lets the method know why it's being
-             *          called.(the button has been clicked)
-             * @return nothing.
-             */
             public void handle(final ActionEvent e) {
+                // Create and show a new file save dialog
                 FileChooser chooser = createGraphChooser();
                 File file = chooser.showSaveDialog(stage);
                 if (file != null) {
+                    // Make sure the file isn't null, then update and show the file
                     graphFile = file;
-                    treeLocation.setText(graphFile.getPath());
+                    graphText.setText(graphFile.getPath());
                 }
             }
         });
@@ -246,49 +222,49 @@ public class ColdenTab {
         // will perform the Huffman compression/ expansion
         this.runButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            /**
-             * This method calls run(), which compresses/expands the input file in the
-             * classes Compress and Expand.
-             * 
-             * @param e is the only parameter, lets the method know why it's being
-             *          called.(the button has been clicked)
-             * @return nothing.
-             */
             public void handle(final ActionEvent e) {
                 System.out.println("Running");
-                if (input != null && output != null) {
-                    if (!input.exists()) {
+                // First make sure the user has chosen files to operate on
+                if (inputFile != null && outputFile != null) {
+                    // Now, make sure that the input file exists
+                    if (!inputFile.exists()) {
                         log("Please select an input file that exists. Aborting.", Level.SEVERE);
                         return;
                     }
 
-                    if (output.exists()) {
+                    // and that the output file doesn't
+                    if (outputFile.exists()) {
                         log("Output file already exists. Aborting.", Level.SEVERE);
                         return;
                     }
 
+                    // Disable the run button to prevent this method from running again
                     runButton.setDisable(true);
 
+                    // Create a new task on a worker thread to run the operation
                     Task<Void> task = new Task<Void>() {
                         @Override
                         protected Void call() throws Exception {
-                            System.out.println("Inside task");
                             doOperation();
                             return null;
                         }
                     };
 
+                    // If the task fails, log the error and show a stack trace
                     task.setOnFailed(evt -> {
                         log("Operation failed on the worker thread: " + task.getException().getMessage(), Level.SEVERE);
                         task.getException().printStackTrace(System.err);
                     });
 
+                    // If the task succeeds, re-enable the run button
                     task.setOnSucceeded(evt -> {
                         runButton.setDisable(false);
                     });
 
+                    // Start the task on a new thread
                     new Thread(task).start();
                 } else {
+                    // If the files haven't been chosen, display an error
                     log("Please select an input and output file before running Colden.", Level.SEVERE);
                 }
             }
@@ -297,48 +273,27 @@ public class ColdenTab {
         // On click, clearInputButton clears the content of the inputText text field
         this.clearInputButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            /**
-             * This method clears the content of the inputText text field.
-             * 
-             * @param e is the only parameter, lets the method know why it's being
-             *          called.(the button has been clicked)
-             * @return nothing.
-             */
             public void handle(final ActionEvent e) {
-                inputText.setText(""); // Log is now emptied
-                input = null;
+                inputText.setText(""); // Text field is now emptied
+                inputFile = null; // File is no longer chosen
             }
         });
 
         // On click, clearOutputButton clears the content of the outputText text field
         this.clearOutputButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            /**
-             * This method clears the content of the outputText text field.
-             * 
-             * @param e is the only parameter, lets the method know why it's being
-             *          called.(the button has been clicked)
-             * @return nothing.
-             */
             public void handle(final ActionEvent e) {
-                outputText.setText(""); // No selected output file exists now
-                output = null;
+                outputText.setText(""); // Text field is now emptied
+                outputFile = null; // File is no longer chosen
             }
         });
 
-        // On click, clearTreeLocation clears the content of the treeLocation text field
-        this.clearTreeLocation.setOnAction(new EventHandler<ActionEvent>() {
+        // On click, clearGraphButton clears the content of the graphText text field
+        this.clearGraphButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
-            /**
-             * This method clears the content of the treeLocation text field.
-             * 
-             * @param e is the only parameter, lets the method know why it's being
-             *          called.(the button has been clicked)
-             * @return nothing.
-             */
             public void handle(final ActionEvent e) {
-                treeLocation.setText(""); // Log is now emptied
-                graphFile = null;
+                graphText.setText(""); // Text field is now emptied
+                graphFile = null; // File is no longer chosen
             }
         });
 
@@ -350,6 +305,8 @@ public class ColdenTab {
             }
         });
 
+        // When the log is updated, try to scroll to the bottom. For some reason, this
+        // doesn't work the first time that the log fills up past the window
         this.log.textProperty().addListener(new ChangeListener<Object>() {
             @Override
             public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
@@ -366,7 +323,7 @@ public class ColdenTab {
      * @param none.
      * @return nothing.
      */
-    public void doOperation() {
+    protected void doOperation() {
     }
 
     /**
@@ -387,10 +344,13 @@ public class ColdenTab {
      * @param prio    is the second, specifies the type of message being printed.
      * @return nothing.
      */
-    public void log(String message, Level prio) {
+    protected void log(String message, Level prio) {
+        // Run this on the UI thread to ensure that when it's called from the
+        // doOperation() method, it doesn't break
         Platform.runLater(new Runnable() {
             @Override
             public void run() {
+                // Log text to both stdout and the log on-screen
                 System.out.println("[ " + prio.getName() + " ]: " + message);
                 log.appendText("[ " + prio.getName() + " ]: " + message + "\n");
             }
@@ -404,7 +364,7 @@ public class ColdenTab {
      * @param none.
      * @return FileChooser - returns this object's fileChooser field
      */
-    public FileChooser createOutputChooser() {
+    protected FileChooser createOutputChooser() {
         return this.fileChooser;
     }
 
