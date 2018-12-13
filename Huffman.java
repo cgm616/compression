@@ -10,6 +10,12 @@ import java.util.PriorityQueue;
  * A representation of a Huffman tree, holding possible values and weights. It
  * can be serialized and deserialized in a minimal form from a byte stream, and
  * it can compress and expand byte streams once constructed.
+ * 
+ * Basic overview ideas about the algorithm came from
+ * https://en.wikipedia.org/wiki/Huffman_coding
+ * 
+ * Some insight into walking the tree came from
+ * https://en.wikipedia.org/wiki/Tree_traversal#Pre-order_(NLR)
  */
 public class Huffman {
     private Node top;

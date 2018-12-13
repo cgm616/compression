@@ -58,3 +58,22 @@ the checkbox. Note that in order for output to work, the `dot` command (part of
 graphviz) must be installed and in the path.
 
 To clear any selected file, click the "Clear" button next to that file's path.
+
+Resources
+---------
+
+We used the following resources:
+
+ - The javadocs at https://docs.oracle.com/javase/7/docs
+ - https://docs.oracle.com/javafx/2/events/handlers.htm
+ - https://en.wikipedia.org/wiki/Huffman_coding
+ - https://docs.oracle.com/javase/8/javafx/user-interface-tutorial
+ - https://en.wikipedia.org/wiki/Tree_traversal#Pre-order_(NLR)
+ - https://stackoverflow.com/questions/4439595/how-to-create-a-sub-array-from-another-array-in-java
+ - https://stackoverflow.com/questions/1494492/graphviz-how-to-go-from-dot-to-a-graph
+ - https://stackoverflow.com/questions/14958346/dot-dash-in-name
+ - https://stackoverflow.com/questions/1806870/how-to-add-edge-labels-in-graphviz
+ - https://stackoverflow.com/questions/27228972/how-to-get-java-profiling-dump-for-creating-flame-graphs-on-the-mac
+ - https://github.com/brendangregg/FlameGraph
+ - https://stackoverflow.com/questions/33112560/why-is-a-thread-blocking-my-javafx-ui-thread
+ - https://stackoverflow.com/questions/40300089/how-to-catch-the-task-exception-in-java-fx-application

@@ -5,7 +5,14 @@ import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 
 /**
- * A visualization of the Huffman tree (known as a graph for the way it is rendered).
+ * A visualization of the Huffman tree (known as a graph for the way it is
+ * rendered).
+ * 
+ * Used
+ * https://stackoverflow.com/questions/1494492/graphviz-how-to-go-from-dot-to-a-graph
+ * for learning how to use graphviz Also
+ * https://stackoverflow.com/questions/14958346/dot-dash-in-name and
+ * https://stackoverflow.com/questions/1806870/how-to-add-edge-labels-in-graphviz
  */
 public class Graph {
     Huffman tree;

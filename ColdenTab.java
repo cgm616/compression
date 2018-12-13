@@ -22,6 +22,9 @@ import javafx.stage.Stage;
 /**
  * The superclass for each of the GUI tabs, handling and holding all
  * GUI-specific functionality that is common between the two.
+ * 
+ * JavaFX information from
+ * https://docs.oracle.com/javase/8/javafx/user-interface-tutorial
  */
 public class ColdenTab {
     private Stage stage; // The JavaFX stage (needed to open fileChoosers)
@@ -173,6 +176,9 @@ public class ColdenTab {
 
         // When clicked, inputButton will create a pop-up window
         // to let the user select an input file
+        //
+        // Consulted https://docs.oracle.com/javafx/2/events/handlers.htm for the basic
+        // information on how to make event handlers
         this.inputButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent e) {
@@ -220,6 +226,9 @@ public class ColdenTab {
 
         // If input and output files have been selected, runButton
         // will perform the Huffman compression/ expansion
+        //
+        // Tasks learned here:
+        // https://stackoverflow.com/questions/33112560/why-is-a-thread-blocking-my-javafx-ui-thread
         this.runButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(final ActionEvent e) {
@@ -251,6 +260,9 @@ public class ColdenTab {
                     };
 
                     // If the task fails, log the error and show a stack trace
+                    //
+                    // Learned here:
+                    // https://stackoverflow.com/questions/40300089/how-to-catch-the-task-exception-in-java-fx-application
                     task.setOnFailed(evt -> {
                         log("Operation failed on the worker thread: " + task.getException().getMessage(), Level.SEVERE);
                         task.getException().printStackTrace(System.err);

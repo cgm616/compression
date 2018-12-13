@@ -3,6 +3,10 @@ import java.util.ArrayList;
 /**
  * A resizeable array of individual bits. They can be read one by one, in groups
  * of bytes, or in groups of ints. Each bit is individually indexed.
+ * 
+ * Used
+ * https://stackoverflow.com/questions/4439595/how-to-create-a-sub-array-from-another-array-in-java
+ * for creating subarrays
  */
 public class BitArray {
     // The length of the array in bits
