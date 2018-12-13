@@ -1,6 +1,7 @@
 import java.io.File;
 import java.util.logging.Level;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
@@ -17,6 +18,10 @@ import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
+/**
+ * The superclass for each of the GUI tabs, handling and holding all
+ * GUI-specific functionality that is common between the two.
+ */
 public class ColdenTab {
     Stage stage;
 
@@ -352,8 +357,13 @@ public class ColdenTab {
      * @return nothing.
      */
     public void log(String message, Level prio) {
-        System.out.println("[ " + prio.getName() + " ]: " + message);
-        this.log.appendText("[ " + prio.getName() + " ]: " + message + "\n");
+        Platform.runLater(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("[ " + prio.getName() + " ]: " + message);
+                log.appendText("[ " + prio.getName() + " ]: " + message + "\n");
+            }
+        });
     }
 
     /**

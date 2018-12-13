@@ -1,5 +1,9 @@
+import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 
+/**
+ * A class that tests the functionality of a number of parts of the application
+ */
 public class Tester {
     public static void main(String[] args) throws Exception {
         testArtifact();
@@ -145,7 +149,9 @@ public class Tester {
 
         byte[] output = tree.compress(input);
 
-        byte[] reexpanded = tree.expand(output);
+        ByteArrayOutputStream outStream = new ByteArrayOutputStream();
+        tree.expand(output, outStream);
+        byte[] reexpanded = outStream.toByteArray();
 
         assert Arrays.equals(reexpanded, input);
         assert output.length > 4;

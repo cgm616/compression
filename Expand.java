@@ -1,5 +1,8 @@
+import java.io.BufferedOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.logging.Level;
 
@@ -86,15 +89,11 @@ public class Expand extends ColdenTab {
                     log("Graph output file written...", Level.INFO);
                 }
 
-                byte[] outputData = expander.expand(body);
-
-                log("Compressed input successfully expanded into " + outputData.length + " bytes...", Level.INFO);
-
-                try {
-                    Artifact.writeBytes(output.toPath(), outputData);
+                try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(output))) {
+                    expander.expand(body, outStream);
+                    outStream.flush();
                 } catch (Exception e) {
-                    log("Could not write expanded file: " + e.getMessage() + ". Aborting.", Level.SEVERE);
-                    return null;
+                    log("Data could not be expanded: " + e.getMessage() + ". Aborting.", Level.SEVERE);
                 }
 
                 log("Expansion and output done.", Level.INFO);
@@ -102,6 +101,11 @@ public class Expand extends ColdenTab {
                 return null;
             }
         };
+
+        task.setOnFailed(evt -> {
+            log("Expansion failed on the worker thread: " + task.getException().getMessage(), Level.SEVERE);
+            task.getException().printStackTrace(System.err);
+        });
 
         new Thread(task).start();
     }

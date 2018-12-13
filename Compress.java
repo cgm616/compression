@@ -99,6 +99,11 @@ public class Compress extends ColdenTab {
             }
         };
 
+        task.setOnFailed(evt -> {
+            log("Compression failed on the worker thread: " + task.getException().getMessage(), Level.SEVERE);
+            task.getException().printStackTrace(System.err);
+        });
+
         new Thread(task).start();
     }
 }

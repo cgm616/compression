@@ -1,7 +1,14 @@
 import java.util.ArrayList;
 
+/**
+ * A resizeable array of individual bits. They can be read one by one, in groups
+ * of bytes, or in groups of ints. Each bit is individually indexed.
+ */
 public class BitArray {
+    // The length of the array in bits
     protected int bitLength;
+
+    // The array of bytes that backs the BitArray and holds its data
     protected ArrayList<Byte> back;
 
     /**
@@ -21,6 +28,26 @@ public class BitArray {
         // Construct a new ArrayList that has the required capacity
         this.back = new ArrayList<Byte>((capacity / 8) + 1);
         this.bitLength = 0;
+    }
+
+    /**
+     * Class constructor of BitArray that takes another BitArray to clone
+     * 
+     * @param other The BitArray to clone
+     */
+    public BitArray(BitArray other) {
+        // Set the new bitLength to the other's
+        this.bitLength = other.bitLength;
+        // Create a new arraylist to back this instance with the same capacity as the
+        // other one
+        ArrayList<Byte> newBack = new ArrayList<Byte>(other.back.size());
+        // For each byte in the other's backing array, add that byte to the new array,
+        // making sure that a new Byte object is created (deep copy)
+        for (Byte b : other.back) {
+            newBack.add(new Byte((byte) b));
+        }
+        // Set the backing array to the new one just created
+        this.back = newBack;
     }
 
     /**
@@ -100,7 +127,7 @@ public class BitArray {
         // At this point, we know that the last byte in the backing array has space for
         // at least one more bit, so we get that byte and then create a mask, locating
         // the next available byte by using the bitLength of the instance itself
-        int last = (int) this.back.get(this.back.size() - 1);
+        int last = (int) this.back.get(bitLength / 8);
         int index = (bitLength) % 8;
         int mask = 1 << (7 - (index));
 
@@ -114,11 +141,17 @@ public class BitArray {
             last = last & (~mask);
         }
 
+        // Set the last byte of the backing array to the updated value
+        this.back.set(bitLength / 8, (byte) last);
+
         // Increment the bitLength of the array by 1
         this.bitLength += 1;
+    }
 
-        // Set the last byte of the backing array to the updated value
-        this.back.set(this.back.size() - 1, (byte) last);
+    public boolean pop() {
+        boolean ret = get(bitLength - 1);
+        this.bitLength -= 1;
+        return ret;
     }
 
     /**
@@ -265,5 +298,11 @@ public class BitArray {
 
         // Return the value
         return (byte) value;
+    }
+
+    public void appendBits(BitArray other) {
+        for (int i = 0; i < other.bitLength; i++) {
+            push(other.get(i));
+        }
     }
 }

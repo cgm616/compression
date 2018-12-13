@@ -1,7 +1,9 @@
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.PriorityQueue;
 
 /**
@@ -294,34 +296,23 @@ public class Huffman {
         // length of bytes it should find in the compressed data
         output.pushInt(input.length);
 
+        // Flatten the tree into a lookup map to speed up compression
+        Map<Byte, BitArray> map = flatten();
+
         // Iterate over each byte in the input
         for (byte b : input) {
-            // Create a Node variable to allow the algorithm to walk the tree
-            Node parent = this.top;
+            // Get the pathway to the current byte from the map
+            BitArray bits = map.get(b);
 
-            while (true) {
-                // Check if the current Node is a leaf node. If it is, we are done compressing
-                // this one, so we move to the next byte
-                if (parent.values.length == 1) {
-                    break;
-                }
-
-                // Check which child to follow for the current byte
-                if (Arrays.binarySearch(parent.left.values, b) >= 0) {
-                    // If the left child contains the byte, output a 0 and set the next node to the
-                    // left child
-                    output.push(false);
-                    parent = parent.left;
-                } else if (Arrays.binarySearch(parent.right.values, b) >= 0) {
-                    // If the right child contains the byte, output a 0 and set the next node to the
-                    // right child
-                    output.push(true);
-                    parent = parent.right;
-                } else {
-                    // If neither child contains the byte, throw an exception because the data
-                    // cannot be serialized
-                    throw new Exception("Byte not found in tree");
-                }
+            // Check if the map contained that key
+            if (bits != null) {
+                // Since a BitArray was associated with that key, that BitArray contains the
+                // compressed version of the current byte. Append it to the output stream
+                output.appendBits(bits);
+            } else {
+                // If the current byte isn't present in the map, then we weren't given it when
+                // building the tree and we throw an exception
+                throw new Exception("Byte not found in tree");
             }
         }
 
@@ -330,19 +321,60 @@ public class Huffman {
     }
 
     /**
+     * This method creates a Map that maps bytes to their bits from the tree
+     * 
+     * @return A map of all the (byte, bits) pairs in the tree
+     */
+    private Map<Byte, BitArray> flatten() {
+        // Create a new Map to hold the pairings we need
+        Map<Byte, BitArray> map = new HashMap<Byte, BitArray>();
+        // Call the recursive internal method that will walk the tree
+        flattenInternal(this.top, map, new BitArray(16));
+        // Return the now-full map
+        return map;
+    }
+
+    /**
+     * This method is internally recursive, and recurses down the tree, adding leaf
+     * nodes to the map
+     * 
+     * @param top  The node to process
+     * @param map  A map of (byte, bits) pairs in the tree
+     * @param path The path to get to the current Node, functioning like a stack
+     */
+    private void flattenInternal(Node top, Map<Byte, BitArray> map, BitArray path) {
+        // Check if the current node is a leaf node or an internal node
+        if (top.values.length == 1) {
+            // The node is a leaf, so we create a new BitArray of the path we took to get
+            // here and put the value into the map as the key to that path
+            map.put(top.values[0], new BitArray(path));
+            return;
+        } else {
+            // The node is internal, so we first push a 0 to the path and then follow the
+            // left direction
+            path.push(false);
+            flattenInternal(top.left, map, path);
+            // Then we pop the 0 from the path and push a 1, following the right direction
+            path.pop();
+            path.push(true);
+            flattenInternal(top.right, map, path);
+            // Then we pop the 1, leaving the BitArray exactly as it was
+            path.pop();
+        }
+    }
+
+    /**
      * This method expands a compressed byte array into another using a built
      * Huffman tree
      * 
      * @param input The byte array input containing the data to be expanded
      * @return A byte array of the original, uncompressed data
+     * @exception IOException Thrown when there is a problem writing to the stream
      */
-    public byte[] expand(byte[] input) {
+    public void expand(byte[] input, OutputStream output) throws IOException {
         // Construct a bitstream from the byte input
         BitArray bits = BitArray.fromBytes(input);
-        // Create an output ArrayList to store expanded bytes with an initial capacity
-        // of roughly twice the input length, corresponding to the rough compression
-        // ratio of the algorithm. This should prevent unneeded allocations
-        ArrayList<Byte> output = new ArrayList<Byte>(2 * input.length);
+
         // Read the first 32 bits of the input bitstream, which represent the length of
         // the original data
         int length = bits.getInt(0);
@@ -367,6 +399,10 @@ public class Huffman {
             // Continue iterating over the tree until at a leaf Node, represented by a
             // values array of length 1
             while (current.values.length > 1) {
+                if (i >= bits.bitLength) {
+                    break;
+                }
+
                 // Check the next valid bit
                 if (bits.get(i)) { // The bit is a 1
                     // Walk down the right path of the tree
@@ -381,23 +417,10 @@ public class Huffman {
             }
 
             // Now at a leaf node, output the value of the Node
-            output.add(current.values[0]);
+            output.write((int) current.values[0] & 0xFF);
             // Increment the bytes output
             bytesOutput += 1;
         }
-
-        // Construct a new byte array output and copy (slowly :( ) every byte of the
-        // ArrayList from before into it
-        byte[] ret = new byte[output.size()];
-        int index = 0;
-
-        for (byte b : output) {
-            ret[index] = b;
-            index += 1;
-        }
-
-        // Return the constructed output array of expanded data
-        return ret;
     }
 
     /**
