@@ -28,7 +28,7 @@ public class ColdenTab {
 
     File input;
     File output;
-    File tree;
+    File graphFile;
 
     GridPane grid;
     FileChooser fileChooser;
@@ -44,7 +44,7 @@ public class ColdenTab {
     Button clearOutputButton;
     Button clearLog;
     Button clearTreeLocation;
-    Button treeButton;
+    Button graphButton;
     CheckBox saveGraph;
     TextArea log;
 
@@ -95,7 +95,7 @@ public class ColdenTab {
         this.clearTreeLocation = new Button("Clear");
 
         // The button to select a file to save the visualization into
-        this.treeButton = new Button("Choose file");
+        this.graphButton = new Button("Choose file");
 
         // The textarea to hold log output
         this.log = new TextArea();
@@ -156,8 +156,8 @@ public class ColdenTab {
         GridPane.setConstraints(saveGraph, 0, 6);
         this.grid.getChildren().add(saveGraph);
 
-        GridPane.setConstraints(treeButton, 1, 6);
-        this.grid.getChildren().add(treeButton);
+        GridPane.setConstraints(graphButton, 1, 6);
+        this.grid.getChildren().add(graphButton);
 
         GridPane.setConstraints(treeLocation, 0, 7);
         this.grid.getChildren().add(treeLocation);
@@ -190,8 +190,7 @@ public class ColdenTab {
              * @return nothing.
              */
             public void handle(final ActionEvent e) {
-                FileChooser chooser = createInputChooser();
-                File file = chooser.showOpenDialog(stage);
+                File file = fileChooser.showOpenDialog(stage);
                 if (file != null) {
                     input = file;
                     inputText.setText(input.getPath());
@@ -221,9 +220,9 @@ public class ColdenTab {
             }
         });
 
-        // When clicked, treeButton will create a pop-up window
+        // When clicked, graphButton will create a pop-up window
         // to let the user select an output file
-        this.treeButton.setOnAction(new EventHandler<ActionEvent>() {
+        this.graphButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             /**
              * This method creates a FileChooser to allow the user to select a location for
@@ -234,11 +233,11 @@ public class ColdenTab {
              * @return nothing.
              */
             public void handle(final ActionEvent e) {
-                FileChooser chooser = createOutputChooser();
+                FileChooser chooser = createGraphChooser();
                 File file = chooser.showSaveDialog(stage);
                 if (file != null) {
-                    tree = file;
-                    treeLocation.setText(tree.getPath());
+                    graphFile = file;
+                    treeLocation.setText(graphFile.getPath());
                 }
             }
         });
@@ -258,6 +257,16 @@ public class ColdenTab {
             public void handle(final ActionEvent e) {
                 System.out.println("Running");
                 if (input != null && output != null) {
+                    if (!input.exists()) {
+                        log("Please select an input file that exists. Aborting.", Level.SEVERE);
+                        return;
+                    }
+
+                    if (output.exists()) {
+                        log("Output file already exists. Aborting.", Level.SEVERE);
+                        return;
+                    }
+
                     runButton.setDisable(true);
 
                     Task<Void> task = new Task<Void>() {
@@ -329,7 +338,7 @@ public class ColdenTab {
              */
             public void handle(final ActionEvent e) {
                 treeLocation.setText(""); // Log is now emptied
-                tree = null;
+                graphFile = null;
             }
         });
 
@@ -389,23 +398,24 @@ public class ColdenTab {
     }
 
     /**
-     * Gets the fileChooser field to select an input file.
+     * Gets the fileChooser field to select an output file. Should be overriden by
+     * subclasses
      * 
      * @param none.
      * @return FileChooser - returns this object's fileChooser field
      */
-    private FileChooser createInputChooser() {
+    public FileChooser createOutputChooser() {
         return this.fileChooser;
     }
 
     /**
-     * Gets the fileChooser field to select an output file.
+     * Gets the fileChooser field to select a graph output file.
      * 
      * @param none.
      * @return FileChooser - returns this object's fileChooser field
      */
-    private FileChooser createOutputChooser() {
+    private FileChooser createGraphChooser() {
+        this.fileChooser.setInitialFileName("graph.pdf");
         return this.fileChooser;
     }
-
 }

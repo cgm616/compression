@@ -1,11 +1,11 @@
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.util.logging.Level;
 
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -66,24 +66,22 @@ public class Expand extends ColdenTab {
         log("Huffman tree successfully deserialized from file...", Level.INFO);
 
         if (saveGraph.isSelected()) {
-            if (tree == null) {
+            if (graphFile == null) {
                 log("No graph output file selected. Expansion will continue.", Level.WARNING);
             } else {
-                File graphOutput = new File(tree.getPath().substring(0, tree.getPath().length() - 3) + "pdf");
-
-                if (graphOutput.exists()) {
+                if (graphFile.exists()) {
                     log("Graph output file already exists. Graph will not be written.", Level.WARNING);
                 } else {
                     try {
                         Graph graph = new Graph(expander);
-                        graph.write(graphOutput);
+                        graph.write(graphFile);
                     } catch (IOException e) {
-                        log("Could not write Huffman tree to graph (file: " + graphOutput.getPath() + "): "
+                        log("Could not write Huffman tree to graph (file: " + graphFile.getPath() + "): "
                                 + e.getMessage() + ". Expansion will continue.", Level.WARNING);
                     }
-                }
 
-                log("Graph output file written...", Level.INFO);
+                    log("Graph output file written...", Level.INFO);
+                }
             }
         }
         try (OutputStream outStream = new BufferedOutputStream(new FileOutputStream(output))) {
@@ -96,5 +94,13 @@ public class Expand extends ColdenTab {
         log("Expansion and output done.", Level.INFO);
 
         return;
+    }
+
+    @Override
+    public FileChooser createOutputChooser() {
+        if (input != null && input.getName().endsWith(".112")) {
+            fileChooser.setInitialFileName(input.getName().substring(0, input.getName().length() - 4));
+        }
+        return fileChooser;
     }
 }

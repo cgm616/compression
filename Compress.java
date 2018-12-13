@@ -1,8 +1,8 @@
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.logging.Level;
 
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 /**
@@ -47,24 +47,22 @@ public class Compress extends ColdenTab {
         log("Huffman tree successfully constructed...", Level.INFO);
 
         if (saveGraph.isSelected()) {
-            if (tree == null) {
+            if (graphFile == null) {
                 log("No graph output file selected.", Level.WARNING);
             } else {
-                File graphOutput = new File(tree.getPath().substring(0, tree.getPath().length() - 3) + "pdf");
-
-                if (graphOutput.exists()) {
+                if (graphFile.exists()) {
                     log("Graph output file already exists. Graph will not be written.", Level.WARNING);
                 } else {
                     try {
                         Graph graph = new Graph(compressor);
-                        graph.write(graphOutput);
+                        graph.write(graphFile);
                     } catch (IOException e) {
-                        log("Could not write Huffman tree to graph (file: " + graphOutput.getPath() + "): "
+                        log("Could not write Huffman tree to graph (file: " + graphFile.getPath() + "): "
                                 + e.getMessage() + ".", Level.WARNING);
                     }
-                }
 
-                log("Graph output file written...", Level.INFO);
+                    log("Graph output file written...", Level.INFO);
+                }
             }
         }
 
@@ -92,5 +90,16 @@ public class Compress extends ColdenTab {
         log("Compression and output done.", Level.INFO);
 
         return;
+    }
+
+    @Override
+    public FileChooser createOutputChooser() {
+        if (input != null) {
+            fileChooser.setInitialFileName(input.getName() + ".112");
+        } else {
+            fileChooser.setInitialFileName("untitled.112");
+        }
+
+        return fileChooser;
     }
 }
