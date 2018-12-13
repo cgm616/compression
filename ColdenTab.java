@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -255,8 +256,29 @@ public class ColdenTab {
              * @return nothing.
              */
             public void handle(final ActionEvent e) {
+                System.out.println("Running");
                 if (input != null && output != null) {
-                    run();
+                    runButton.setDisable(true);
+
+                    Task<Void> task = new Task<Void>() {
+                        @Override
+                        protected Void call() throws Exception {
+                            System.out.println("Inside task");
+                            doOperation();
+                            return null;
+                        }
+                    };
+
+                    task.setOnFailed(evt -> {
+                        log("Operation failed on the worker thread: " + task.getException().getMessage(), Level.SEVERE);
+                        task.getException().printStackTrace(System.err);
+                    });
+
+                    task.setOnSucceeded(evt -> {
+                        runButton.setDisable(false);
+                    });
+
+                    new Thread(task).start();
                 } else {
                     log("Please select an input and output file before running Colden.", Level.SEVERE);
                 }
@@ -335,7 +357,7 @@ public class ColdenTab {
      * @param none.
      * @return nothing.
      */
-    public void run() {
+    public void doOperation() {
     }
 
     /**
