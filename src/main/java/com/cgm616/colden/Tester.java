@@ -1,3 +1,5 @@
+package com.cgm616.colden;
+
 import java.io.ByteArrayOutputStream;
 import java.util.Arrays;
 

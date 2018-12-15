@@ -1,3 +1,5 @@
+package com.cgm616.colden;
+
 import java.io.BufferedOutputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;

@@ -1,3 +1,5 @@
+package com.cgm616.colden;
+
 import javafx.application.Application;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -10,7 +12,7 @@ import javafx.stage.Stage;
 /**
  * Entry point of the application, run using JavaFX.
  */
-public class Main extends Application {
+public class App extends Application {
 
     @Override
     public void start(Stage stage) {

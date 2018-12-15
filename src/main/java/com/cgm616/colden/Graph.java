@@ -1,3 +1,5 @@
+package com.cgm616.colden;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
