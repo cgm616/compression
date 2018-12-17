@@ -1,7 +1,12 @@
 package com.cgm616.colden;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.logging.Level;
 
 import javafx.stage.FileChooser;
@@ -21,27 +26,21 @@ public class Compress extends ColdenTab {
         log("Running compression... (input: " + inputFile.getPath() + ", output: " + outputFile.getPath() + ")",
                 Level.INFO);
 
-        // Try to get input data from file, reading it into memory
-        byte[] inputData;
-        try {
-            inputData = Files.readAllBytes(inputFile.toPath());
-        } catch (IOException e) {
-            log("Input file could not be read: " + e.getMessage() + ". Aborting.", Level.SEVERE);
-            return;
-        }
-
-        // Make sure the data is more than 0 bytes
-        if (inputData.length < 1) {
-            log("Please select an input file that is longer than 0 bytes. Aborting.", Level.SEVERE);
-            return;
-        } else {
-            log("Compressing " + inputData.length + " bytes...", Level.INFO);
-        }
-
-        // Try to construct a compressor using the data
         Huffman compressor;
-        try {
-            compressor = new Huffman(inputData);
+        int inputLength;
+        try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile))) {
+            inputLength = (int) inputFile.length();
+
+            // Make sure the data is more than 0 bytes
+            if (inputLength < 1) {
+                log("Please select an input file that is longer than 0 bytes. Aborting.", Level.SEVERE);
+                return;
+            } else {
+                log("Compressing " + inputLength + " bytes...", Level.INFO);
+            }
+
+            // Try to construct a compressor using the data
+            compressor = new Huffman(in);
         } catch (Exception e) {
             log("Huffman tree could not be made: " + e.getMessage() + ". Aborting.", Level.SEVERE);
             return;
@@ -74,32 +73,25 @@ public class Compress extends ColdenTab {
             }
         }
 
-        // Try to compress the input data with the constructed tree
-        byte[] outputBody;
-        try {
-            outputBody = compressor.compress(inputData);
+        try (InputStream in = new BufferedInputStream(new FileInputStream(inputFile));
+                OutputStream out = new BufferedOutputStream(new FileOutputStream(outputFile))) {
+            Artifact.writeHeader(out, compressor);
+
+            try (BitOutputStream bitOut = new BitOutputStream(out)) {
+                compressor.compress(in, bitOut, inputLength);
+            } catch (Exception e) {
+                log("Could not compress data with the Huffman tree: " + e.getMessage() + ". Aborting.", Level.SEVERE);
+                return;
+            }
         } catch (Exception e) {
-            log("Could not compress data with the Huffman tree: " + e.getMessage() + ". Aborting.", Level.SEVERE);
+            log("Could not create outout file: " + e.getMessage() + ". Aborting.", Level.SEVERE);
             return;
         }
 
-        // Build a new output file from the compressed data and the tree
-        Artifact outputData = Artifact.build(compressor, outputBody);
-
-        // Compute and log a compression ratio
-        double compressionRatio = ((double) outputData.bytes.length * 8) / (double) inputData.length;
+        double compressionRatio = ((double) outputFile.length() * 8) / (double) inputLength;
         log("Data successfully compressed with a ratio of " + compressionRatio + " bits per byte...", Level.INFO);
 
-        // Try to write the file to the output path
-        try {
-            outputData.writeToPath(outputFile.toPath());
-        } catch (IOException e) {
-            log("Could not write compressed file: " + e.getMessage() + ". Aborting.", Level.SEVERE);
-        }
-
         log("Compression and output done.", Level.INFO);
-
-        return;
     }
 
     @Override

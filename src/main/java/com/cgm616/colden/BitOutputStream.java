@@ -43,6 +43,17 @@ public class BitOutputStream extends FilterOutputStream {
         this.buffer = toWrite;
     }
 
+    public void writeInt(int b) throws IOException {
+        commit();
+        this.buffer |= ((b >> 24) & 0xFF) << (24 - this.length);
+        this.buffer |= ((b >> 16) & 0xFF) << (16 - this.length);
+        this.buffer |= ((b >> 8) & 0xFF) << (8 - this.length);
+        this.length += 24;
+        commit();
+        this.buffer |= (b & 0xFF) << (24 - this.length);
+        this.length += 8;
+    }
+
     @Override
     public void flush() throws IOException {
         commit();
@@ -77,6 +88,12 @@ public class BitOutputStream extends FilterOutputStream {
         }
 
         this.length += 1;
+    }
+
+    public void appendBits(BitArray bits) throws IOException {
+        for (int i = 0; i < bits.bitLength; i++) {
+            write(bits.get(i));
+        }
     }
 
     private void commit() throws IOException {

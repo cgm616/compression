@@ -1,6 +1,7 @@
 package com.cgm616.colden;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.Writer;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ public class Huffman {
      * @exception Exception Thrown when the Huffman tree errors on building, and
      *                      contains an explanation message
      */
-    public Huffman(byte[] input) throws Exception {
+    public Huffman(InputStream input) throws Exception {
         // Run the build function and set the Node returned to the top of the tree
         this.top = build(input);
     }
@@ -62,22 +63,26 @@ public class Huffman {
      *                      tree cannot be built due to a logic error, with a
      *                      message differentiating the two
      */
-    private Node build(byte[] input) throws Exception {
-        // First, we immediately throw an exception if the input is less than one byte
-        if (input.length < 1) {
-            throw new Exception("The input has no bytes");
-        }
-
+    private Node build(InputStream input) throws Exception {
         // Create a new map, of sorts. The byte index into the array is the key, and the
         // value at that index is the value. Java automatically inits array elements to
         // 0, so this is an array of all 0s right now
         int[] frequencies = new int[256];
 
+        // Get the first byte from the stream
+        int b = input.read();
+
+        // We immediately throw an exception if the input is less than one byte
+        if (b == -1) {
+            throw new Exception("The input has no bytes");
+        }
+
         // Iterate over the input to get a list of byte frequencies
-        for (byte b : input) {
+        while (b != -1) {
             // Grab the frequency for the current byte and increment it. If it is 0, it
             // becomes 1. If it's something else, it increments
             frequencies[b & 0xFF] = frequencies[b & 0xFF] + 1;
+            b = input.read();
         }
 
         // Now, we construct a priority queue to order the Nodes while constructing a
@@ -296,36 +301,29 @@ public class Huffman {
      * @exception Exception Thrown when a byte in the input data isn't found in the
      *                      tree, or when the tree is malconstructed
      */
-    public byte[] compress(byte[] input) throws Exception {
-        // Create a new bitstream to push bits too
-        BitArray output = new BitArray();
-
+    public void compress(InputStream input, BitOutputStream output, int length) throws Exception {
         // Push a 4 byte integer to the bitstream, giving an expansion algorithm the
         // length of bytes it should find in the compressed data
-        output.pushInt(input.length);
+        output.writeInt(length);
 
         // Flatten the tree into a lookup map to speed up compression
         Map<Byte, BitArray> map = flatten();
 
-        // Iterate over each byte in the input
-        for (byte b : input) {
-            // Get the pathway to the current byte from the map
-            BitArray bits = map.get(b);
-
-            // Check if the map contained that key
+        // Iterate over the data in the compression stream
+        int data = input.read();
+        while (data != -1) {
+            // Find the corresponding path in the huffman tree to that data
+            BitArray bits = map.get((byte) data);
+            // Make sure the path exists
             if (bits != null) {
-                // Since a BitArray was associated with that key, that BitArray contains the
-                // compressed version of the current byte. Append it to the output stream
+                // If it does, append the bits to the stream
                 output.appendBits(bits);
             } else {
-                // If the current byte isn't present in the map, then we weren't given it when
-                // building the tree and we throw an exception
+                // Otherwise, throw an exception
                 throw new Exception("Byte not found in tree");
             }
+            data = input.read();
         }
-
-        // Convert the bitstream to a byte array and return
-        return output.toArray();
     }
 
     /**

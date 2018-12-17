@@ -1,6 +1,7 @@
 package com.cgm616.colden;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
@@ -172,5 +173,13 @@ public class Artifact {
      */
     public static void writeBytes(Path path, byte[] bytes) throws IOException {
         Files.write(path, bytes, StandardOpenOption.CREATE_NEW, StandardOpenOption.WRITE);
+    }
+
+    public static void writeHeader(OutputStream out, Huffman tree) throws IOException {
+        out.write(Artifact.MAGIC);
+        out.write(tree.serialize());
+        out.write(Artifact.MARKER);
+        out.write(Artifact.MARKER);
+        out.write(Artifact.MARKER);
     }
 }

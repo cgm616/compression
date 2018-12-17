@@ -98,6 +98,7 @@ public class Expand extends ColdenTab {
             outStream.flush();
         } catch (Exception e) {
             log("Data could not be expanded: " + e.getMessage() + ". Aborting.", Level.SEVERE);
+            return;
         }
 
         log("Expansion and output done.", Level.INFO);
