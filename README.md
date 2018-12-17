@@ -1,6 +1,8 @@
 Colden
 ======
 
+[![Travis](https://img.shields.io/travis/cgm616/compression/master.svg)](https://travis-ci.org/cgm616/compression)
+
 Colden is a compression application that uses a Huffman tree to make files
 smaller, losslessly.
 
