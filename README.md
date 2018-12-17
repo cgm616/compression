@@ -2,6 +2,7 @@ Colden
 ======
 
 [![Travis](https://img.shields.io/travis/cgm616/compression/master.svg)](https://travis-ci.org/cgm616/compression)
+[![License](https://img.shields.io/badge/license-mit-blue.svg)](https://github.com/cgm616/compression/blob/master/LICENSE)
 
 Colden is a compression application that uses a Huffman tree to make files
 smaller, losslessly.
