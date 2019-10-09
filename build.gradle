@@ -21,7 +21,7 @@ dependencies {
     testRuntime "org.slf4j:slf4j-simple:1.7.28"
     testImplementation 'junit:junit:4.12'
     testImplementation 'com.pholser:junit-quickcheck-core:0.9'
-    testImplementation 'com.pholser:junit-quickcheck-generators:0.8.2'
+    testImplementation 'com.pholser:junit-quickcheck-generators:0.9'
 }
 
 javafx {
